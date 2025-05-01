@@ -1,0 +1,77 @@
+site_name: Informationsbeschaffung &lt;Lehmann&gt; &lt;Bastian&gt;
+# site_url: <deployed URL>
+use_directory_urls: false
+nav:
+  - Infos: info.md
+  - Ideen: ideen.md
+  - Komponenten: komponenten.md
+
+
+exclude_docs: |
+    *.html
+
+theme:
+  name: material
+  logo: img/logo.png
+  favicon: img/favicon-32x32.png
+  language: de
+  features:
+    - navigation.instant
+    - toc.integrate
+    - content.tabs.link
+markdown_extensions:
+  - pymdownx.highlight:
+      linenums_style: pymdownx-inline
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format   
+  - pymdownx.tabbed:
+        alternate_style: true
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - admonition
+  - pymdownx.details
+  - footnotes
+  - meta
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+      toc_depth: 4
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+extra_css:
+  - stylesheets/extra.css
+copyright: Copyright &copy; 2024 <a href='https://www.gbssg.ch'><span style='font-weight:1000'>gbs</span>sg.ch</a> <span class='green'>|</span> IMS-T <span class='green'>|</span> Informationsbeschaffung
+extra:
+  social:
+    - icon: material/home
+      link: https://www.gbssg.ch
+      name: IMT-T@gbssg.ch
+
+plugins:
+    - search
+    - pandoc:
+        enabled_if_env: ENABLE_PDF_BUILD
+        combined: true
+        combined_output_path: ../lerndokumentation.pdf
+        pandoc_args: 
+           top-level-division: chapter
+           toc: true
+           number-sections: true
+           toc-depth: 4
+           include-in-header: ../_utils/preamble.tex
+           lua-filter: ../_utils/emoji_filter.lua
+           variable: sansfont:true
+           #variable: lang:de

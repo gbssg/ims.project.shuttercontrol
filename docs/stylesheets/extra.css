@@ -1,0 +1,136 @@
+/* Anpassung Grundfarbe*/
+:root {
+  --md-primary-fg-color:        #CCCC00;
+  --md-accent-fg-color:			#8A9100;
+}
+
+/* Container für das einbinden von Youtube videos*/
+.container {
+	position: relative; 
+	padding-bottom: 56.25%; 
+	padding-top: 30px; 
+	height: 0; 
+	overflow: hidden;
+}
+.video {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/* Farbanpassung bei offenen Abstract Boxen*/
+.abstract .admonition-title{
+	background-color:#CCCC00 !important;
+	color:white;
+}
+.admonition.abstract{
+	border-left: .2rem solid #939C00 !important;
+}
+
+.abstract > .admonition-title::before{
+	background-color:white !important;
+}
+
+/* Farbanpassung bei Success Listen */
+.md-typeset [type="checkbox"]:checked + .task-list-indicator::before {
+	background-color:#CCCC00 !important;
+}
+
+/* Farbanpassung bei aufklappbaren success Boxen*/
+.md-typeset details.success {
+	border-color:#CCCC00 !important;
+}
+.md-typeset .success > summary {
+	background-color:#eeeeee !important;
+	border-color:#CCCC00 !important;
+}
+.md-typeset .success > summary::before {
+	background-color:#CCCC00 !important;
+	border-color:#CCCC00 !important;
+}
+
+/* Bilderbeschriftung */
+img + br + em{
+	font-size:smaller;
+	color: #939C00;
+	
+}
+
+/* Ränderfarben*/
+.md-nav__title .md-nav__button.md-logo img{
+	width: inherit;
+	border: none;
+}
+
+img{
+	border:1px solid #939C00;
+}
+code{
+	border:1px solid #939C00;
+}
+
+label.md-nav__link{
+	font-weight: bold;
+}
+
+label.md-nav__title{
+	/*color: white !important;*/
+}
+
+.md-header__button.md-logo img{
+	width: 100%;
+	height:100%;
+	border:none;
+}
+
+.md-typeset__table th{
+	background-color: #CCCC00 !important;
+}
+
+.bg-yellow{
+	background-color: rgba(255,255,0,0.5);	
+}
+.bg-green{
+	background-color: rgba(0,255,0,0.5);	
+}
+.bg-red{
+	background-color: rgba(255,0,0,0.5);	
+}
+
+.md-header__title .md-ellipsis {
+	background-color: #444444;
+	margin: 0;
+	padding: 0 10px 0 10px; 
+	font-weight: 800;
+	transform: rotate(-2deg);
+}
+
+.md-header__title .md-ellipsis::after {
+	font-weight: 900;
+	bottom: 0;
+	color: #CCCC00;
+	content: '.';
+	position: absolute;
+	margin-left: 8px;
+	transform: translate(-100%, 0);
+}
+
+.md-footer__title .md-ellipsis::after {
+	bottom: 0;
+	color: #CCCC00;
+	content: '.';
+	position: absolute;
+	margin-left: 8px;
+	transform: translate(-100%, 0);
+}
+
+.right {
+	display: block;
+	float:right;
+}
+
+.twemoji {
+	border: none;
+}
