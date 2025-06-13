@@ -148,3 +148,14 @@ Enthält Qwiic anschlüsse welche leicht verwendbar sind. Hat die richtige anzah
 #### SparkFun Qwiic Button
 
 Enthält Qwiic anschlüsse welche leicht verwendbar sind. 
+
+### Ablauf Diagramme Überarbeitung
+
+![Ablauv_V1](img/Ablauf_v1.drawio.svg)
+
+
+
+
+![Ablauf_V2](img/Ablauf_v2.drawio.svg)
+
+
