@@ -1,5 +1,3 @@
-
-
 #include <Arduino.h>
 #include <HardwareSetup.h>
 #include <ControlLogic.h>
