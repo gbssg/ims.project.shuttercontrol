@@ -6,7 +6,7 @@
 #include <SimpleSoftTimer.h>
 using namespace HolisticSolutions;
 
-// Enums for motor control
+// Enums for motor logic
 typedef enum eControlMotor
 {
   CONTROLMOTOR_UNKNOWN = 0,
@@ -17,6 +17,7 @@ typedef enum eControlMotor
   CONTROLMOTOR_COUNT
 } tControlMotor;
 
+// Enums for control logic
 typedef enum eControlState
 {
   CONTROL_ST_UNKNOWN = 0,
@@ -27,6 +28,7 @@ typedef enum eControlState
   CONTROL_ST_COUNT
 } tControlState;
 
+// Enums for communication between control and motor
 typedef enum eMotorState
 {
   MOTOR_ST_UNKNOWN = 0,
@@ -43,6 +45,9 @@ typedef enum eMotorState
 
 extern uintptr_t _controlmotor;
 
+// timers for motor cooldown
 static SimpleSoftTimer _timerUp(1000);
 static SimpleSoftTimer _timerDown(1000);
+
+// timer to prevent multiple clicks
 static SimpleSoftTimer _timerPressed(300);

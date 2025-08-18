@@ -1,3 +1,6 @@
+// The Setup of the Qwiic Devices for the project "shuttercontroll"
+// Autor: Bastian Lehmann, IMS-T
+
 #include <Arduino.h>
 #include "HardwareSetup.h"
 
@@ -41,4 +44,6 @@ void setupHardware()
     // LED config if neded
     // buttonUp1.LEDconfig(0,0,0);
     // buttonDown1.LEDconfig(0,0,0);
+    // buttonUp2.LEDconfig(0,0,0);
+    // buttonDown2.LEDconfig(0,0,0);
 }

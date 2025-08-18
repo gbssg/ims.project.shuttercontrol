@@ -1,3 +1,6 @@
+// Setup and Handling of the API for the project "shuttercontroll"
+// Autor: Bastian Lehmann, IMS-T
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>

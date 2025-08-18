@@ -1,3 +1,6 @@
+// Simple State Processor translating and sending the button inputs to the MotorLogic for the project "shuttercontroll"
+// Autor: Bastian Lehmann, IMS-T
+
 #include <SimpleStateProcessor.h>
 #include <SimpleSoftTimer.h>
 #include <HardwareSetup.h>
