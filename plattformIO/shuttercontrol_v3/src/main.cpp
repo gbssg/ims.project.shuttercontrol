@@ -11,7 +11,7 @@ void setup()
   Serial.begin(115200);
   setupHardware();
   connectWifi();
-  // setupServer();
+  setupAPI();
   setupControl();
   setupMotor();
 }
@@ -22,5 +22,6 @@ void loop()
   // LEDs and Relais can get misaligned
   // testingControl();
   // running State Machine
+  // API running
   runMotor();
 }
