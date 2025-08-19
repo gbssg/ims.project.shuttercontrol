@@ -22,6 +22,5 @@ void loop()
   // LEDs and Relais can get misaligned
   // testingControl();
   // running State Machine
-  // API running
   runMotor();
 }
