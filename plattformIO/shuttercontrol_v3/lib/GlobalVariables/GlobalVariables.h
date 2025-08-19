@@ -51,3 +51,8 @@ static SimpleSoftTimer _timerDown(1000);
 
 // timer to prevent multiple clicks
 static SimpleSoftTimer _timerPressed(300);
+
+// timer to stop if the shutter is completley up/down
+// change to fit your shutter
+static SimpleSoftTimer _timerStop(20000);
+extern bool useTimer;
