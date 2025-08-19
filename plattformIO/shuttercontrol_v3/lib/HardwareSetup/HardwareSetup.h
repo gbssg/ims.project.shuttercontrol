@@ -2,6 +2,8 @@
 #include <SparkFun_Qwiic_Button.h>
 #include <SparkFun_Qwiic_Relay.h>
 
+// To reconfigure the Adresses use the Example Code from Sparkfun
+
 #define RELAY_ADDRESS 0x6D
 #define BUTTONUP1_ADDRESS 0x6F
 #define BUTTONDOWN1_ADDRESS 0x71
