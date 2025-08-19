@@ -157,6 +157,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
     quadRelay.turnRelayOn(1);
     Serial.println("Going Up");
     buttonUp1.LEDon();
+    _timerStop.restart();
   }
   if (reason == SSP_REASON_DO)
   {
@@ -170,6 +171,10 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
       break;
     default:
       break;
+    }
+    if (_timerStop.isTimeout() && useTimer)
+    {
+      fsm->NextStateSet(MOTOR_ST_IDLEUP);
     }
     runControl();
     handleClient();
@@ -192,6 +197,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
     quadRelay.turnRelayOn(2);
     Serial.println("Going Down");
     buttonDown1.LEDon();
+    _timerStop.restart();
   }
   if (reason == SSP_REASON_DO)
   {
@@ -205,6 +211,10 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
       break;
     default:
       break;
+    }
+    if (_timerStop.isTimeout() && useTimer)
+    {
+      fsm->NextStateSet(MOTOR_ST_IDLEDOWN);
     }
     runControl();
     handleClient();

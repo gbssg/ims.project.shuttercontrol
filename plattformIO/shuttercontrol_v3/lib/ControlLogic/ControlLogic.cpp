@@ -73,7 +73,6 @@ if (reason == SSP_REASON_ENTER)
     Serial.println("GoUp");
     buttonUp1.LEDon();
     buttonDown1.LEDoff();
-    _timerStop.restart();
 }
 if (reason == SSP_REASON_DO)
 {
@@ -87,10 +86,6 @@ if (reason == SSP_REASON_DO)
     _timerPressed.restart();
     fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
     }
-    if (_timerStop.isTimeout() && useTimer)
-    {
-      fsm->NextStateSet(CONTROL_ST_IDLE);
-    }
 }
 return 0;
 }
@@ -103,7 +98,6 @@ if (reason == SSP_REASON_ENTER)
     Serial.println("GoDown");
     buttonUp1.LEDoff();
     buttonDown1.LEDon();
-    _timerStop.restart();
 }
 if (reason == SSP_REASON_DO)
 {
@@ -116,10 +110,6 @@ if (reason == SSP_REASON_DO)
     {
     _timerPressed.restart();
     fsm->NextStateSet(CONTROL_ST_IDLE);
-    }
-    if (_timerStop.isTimeout() && useTimer)
-    {
-      fsm->NextStateSet(CONTROL_ST_IDLE);
     }
 }
 return 0;
