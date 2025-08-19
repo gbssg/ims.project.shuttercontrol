@@ -3,6 +3,7 @@
 #include <ControlLogic.h>
 #include <MotorLogic.h>
 #include <NetworkServer.h>
+#include <Predefined.h>
 
 // using namespace HolisticSolutions;
 
@@ -14,6 +15,7 @@ void setup()
   setupAPI();
   setupControl();
   setupMotor();
+  setupTimerPre();
 }
 
 void loop() 
