@@ -18,7 +18,7 @@ void setup()
 
 void loop() 
 {
-  //do not use testingControl with runMotor it will cause problems!
+  // do not use testingControl with runMotor it will cause problems!
   // LEDs and Relais can get misaligned
   // testingControl();
   // running State Machine
