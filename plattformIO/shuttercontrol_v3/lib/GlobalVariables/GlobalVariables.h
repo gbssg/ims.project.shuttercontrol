@@ -6,6 +6,13 @@
 #include <SimpleSoftTimer.h>
 using namespace HolisticSolutions;
 
+extern int timeDown;
+extern int timeUp;
+extern int timeTiltUp;
+extern int timeTiltDown;
+extern int timeUpTotal;
+extern int timeDownTotal;
+
 // Enums for motor logic
 typedef enum eControlMotor
 {
@@ -56,3 +63,10 @@ static SimpleSoftTimer _timerPressed(300);
 // change to fit your shutter
 static SimpleSoftTimer _timerStop(20000);
 extern bool useTimer;
+
+static SimpleSoftTimer _timeDown(timeDown);
+static SimpleSoftTimer _timeUp(timeUp);
+static SimpleSoftTimer _timeTiltUp(timeTiltUp);
+static SimpleSoftTimer _timeTiltDown(timeTiltDown);
+static SimpleSoftTimer _timeUpTotal(timeUpTotal);
+static SimpleSoftTimer _timeDownTotal(timeDownTotal);

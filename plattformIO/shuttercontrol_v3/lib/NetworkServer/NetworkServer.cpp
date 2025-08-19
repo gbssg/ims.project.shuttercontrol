@@ -6,6 +6,7 @@
 #include <WebServer.h>
 #include <GlobalVariables.h>
 #include "NetworkServer.h"
+#include <Predefined.h>
 
 // you need to make your own secrets.h file to connect to your Nertwork
 // plattformIO\shuttercontrol_v3\lib\secrets\secrets.h
@@ -67,6 +68,11 @@ void setupAPI()
         Serial.println("Stop1");
         server.send(200, "text/plain", "Stop1");
         _controlmotor = CONTROLMOTOR_STOP;
+    });
+
+    server.on("/Pre1", []() {
+       server.send(200, "text/plain", "Preset1");
+       Preset1();
     });
 
     // server.on("/Up2", []() {
