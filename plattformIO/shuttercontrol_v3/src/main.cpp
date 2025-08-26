@@ -10,10 +10,14 @@ void setup()
 {
   Serial.begin(115200);
   setupHardware();
+  buttonUp1.LEDconfig(100, 1000, 500, 20);
+  buttonDown1.LEDconfig(100, 1000, 500, 20);
   connectWifi();
   setupAPI();
   setupControl();
   setupMotor();
+  buttonUp1.LEDoff();
+  buttonDown1.LEDoff();
 }
 
 void loop() 
