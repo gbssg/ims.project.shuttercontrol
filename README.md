@@ -11,8 +11,11 @@ The code is made for the PlatformIO extension for visual studio code.
 If you want to use this code you have to make an secrets.h file or add your ssid and password (not recomended) to connct to wifi.
 
 ### secrets.h
+
 plattformIO\shuttercontrol_v3\lib\secrets\secrets.h
+
 Template:
+
 #pragma once
 
 const char *WIFI_SSID = "<SSID>"
