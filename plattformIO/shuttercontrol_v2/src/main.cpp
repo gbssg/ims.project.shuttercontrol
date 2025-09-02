@@ -136,12 +136,15 @@ void setup()
   Serial.begin(115200);
   Wire.begin();
 
-  //testing connection to all components
+  //starting connection to all components
   if (!quadRelay.begin())
+  {
     Serial.println("Connection to QuadRelay Failed");
+  }
   else
+  {
     quadRelay.turnAllRelaysOff();
-
+  }
   if (!buttonUp1.begin(BUTTONUP1_ADDRESS))
   {
     Serial.println("Button 1 not connected");
