@@ -259,7 +259,8 @@ SSP_STATE_HANDLER(MotorStateIdle)
 {
   if (reason == SSP_REASON_ENTER)
   {
-    quadRelay.turnAllRelaysOff();
+    quadRelay.turnRelayOff(1);
+    quadRelay.turnRelayOff(2);
     Serial.println("Idle Mot");
   }
   if (reason == SSP_REASON_DO)
@@ -288,7 +289,8 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
 {
   if (reason == SSP_REASON_ENTER)
   {
-    quadRelay.turnAllRelaysOff();
+    quadRelay.turnRelayOff(1);
+    quadRelay.turnRelayOff(2);
     _timerUp.restart();
     Serial.println("Idle Up");
   }
@@ -322,7 +324,8 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
 {
   if (reason == SSP_REASON_ENTER)
   {
-    quadRelay.turnAllRelaysOff();
+    quadRelay.turnRelayOff(1);
+    quadRelay.turnRelayOff(2);
     _timerDown.restart();
     Serial.println("Idle Down");
   }
