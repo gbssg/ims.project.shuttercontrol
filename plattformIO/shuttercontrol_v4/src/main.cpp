@@ -5,13 +5,16 @@
 void setup() 
 {
     Serial.begin(115200);
+    Wire.begin();
     delay(1000);
-    control1 -> run();
-    control2 -> run();
+    control1->setup();
+    control2->setup();
+    
     
 }
 
 void loop() 
 {
-
+    control1 -> run();
+    control2 -> run();
 } 

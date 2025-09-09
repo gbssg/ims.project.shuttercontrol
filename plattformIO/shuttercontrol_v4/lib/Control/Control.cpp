@@ -14,9 +14,6 @@ static const tSSP_State ControlStateMachine[] = {
     SSP_STATE_LAST()};
 
 
-static SimpleStateProcessor Control(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
-static SimpleStateProcessor Control2(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
-
 void tControl::run()
 {
     sspControl ->run();
@@ -24,6 +21,10 @@ void tControl::run()
 
 void tControl::setup()
 {
+    buttonUp = new QwiicButton();
+    buttonUp->begin(this -> buttonUpAddr);
+    buttonDown = new QwiicButton();
+    buttonDown->begin(this -> buttonUpAddr);
     sspControl = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
     sspControl -> reset();
 }
@@ -35,5 +36,4 @@ uintptr_t tControl::getState()
 
 tControl* control1 = new tControl();
 tControl* control2 = new tControl();
-
 
