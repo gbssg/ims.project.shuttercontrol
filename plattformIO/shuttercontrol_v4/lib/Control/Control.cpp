@@ -15,22 +15,25 @@ static const tSSP_State ControlStateMachine[] = {
 
 
 static SimpleStateProcessor Control(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
-
+static SimpleStateProcessor Control2(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
 
 void tControl::run()
 {
-    Serial.println("Hello World");
+    sspControl ->run();
 }
 
 void tControl::setup()
 {
-
+    sspControl = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
+    sspControl -> reset();
 }
 
-void tControl::getState()
+uintptr_t tControl::getState()
 {
-    
+    return sspControl ->CurrentStateGet();
 }
 
 tControl* control1 = new tControl();
 tControl* control2 = new tControl();
+
+

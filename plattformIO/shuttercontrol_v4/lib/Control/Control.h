@@ -7,9 +7,10 @@ typedef struct sControl
 {
     void setup();
     void run();
-    void getState();
-    SimpleStateProcessor Control();
+    uintptr_t getState();
+    SimpleStateProcessor* sspControl;
 }tControl;
+
 
 typedef enum eControlState
 {
