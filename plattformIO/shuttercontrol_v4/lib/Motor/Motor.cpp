@@ -22,5 +22,5 @@ void tMotor::stop()
 
 uintptr_t tMotor::getState()
 {
-
+    
 }

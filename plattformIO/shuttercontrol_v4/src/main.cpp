@@ -6,9 +6,10 @@ void setup()
 {
     Serial.begin(115200);
     Wire.begin();
+    Serial.println("Start");
     delay(1000);
-    control1->setup();
-    control2->setup();
+    control1->setup(1);
+    control2->setup(2);
     
     
 }

@@ -1,3 +1,4 @@
+
 #include "Control.h"
 
 SSP_STATE_HANDLER(ControlStateUnknown);
@@ -19,12 +20,12 @@ void tControl::run()
     sspControl ->run();
 }
 
-void tControl::setup()
+void tControl::setup(const tControl* control)
 {
     buttonUp = new QwiicButton();
-    buttonUp->begin(this -> buttonUpAddr);
+    buttonUp->begin(control -> buttonDownAddr);
     buttonDown = new QwiicButton();
-    buttonDown->begin(this -> buttonUpAddr);
+    buttonDown->begin(control -> buttonUpAddr);
     sspControl = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
     sspControl -> reset();
 }
@@ -44,8 +45,8 @@ SSP_STATE_HANDLER(ControlStateUnknown)
     case SSP_REASON_ENTER:
         fsm-> NextStateSet(CONTROL_ST_IDLE);
         Serial.println("Unknown");
-        buttonUp->LEDon();
-        buttonDown->LEDon();
+        buttonUp->LEDoff();
+        buttonDown->LEDoff();
         break;
     case SSP_REASON_DO:
         break;
@@ -62,11 +63,13 @@ SSP_STATE_HANDLER(ControlStateStop)
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        fsm-> NextStateSet(CONTROL_ST_IDLE);
-        Serial.println("Unknown");
-
+        Serial.println("Stop");
         break;
     case SSP_REASON_DO:
+        if (buttonUp->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_GOINGUP);}
+        if (buttonDown->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_GOINGDOWN);}
         break;
     case SSP_REASON_EXIT:
         break;
@@ -81,11 +84,13 @@ SSP_STATE_HANDLER(ControlStateUp)
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        fsm-> NextStateSet(CONTROL_ST_IDLE);
-        Serial.println("Unknown");
-
+        Serial.println("Up");
         break;
     case SSP_REASON_DO:
+        if (buttonUp->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_IDLE);}
+        if (buttonDown->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_GOINGDOWN);}
         break;
     case SSP_REASON_EXIT:
         break;
@@ -100,11 +105,13 @@ SSP_STATE_HANDLER(ControlStateDown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        fsm-> NextStateSet(CONTROL_ST_IDLE);
-        Serial.println("Unknown");
-
+        Serial.println("Down");
         break;
     case SSP_REASON_DO:
+        if (buttonUp->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_GOINGUP);}
+        if (buttonDown->isPressed())
+        {fsm->NextStateSet(CONTROL_ST_IDLE);}
         break;
     case SSP_REASON_EXIT:
         break;

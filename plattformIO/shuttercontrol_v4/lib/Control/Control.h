@@ -6,7 +6,7 @@
 
 typedef struct sControl
 {
-    void setup();
+    void setup(const tControl* control);
     void run();
     uintptr_t getState();
     uint8_t buttonUpAddr;
