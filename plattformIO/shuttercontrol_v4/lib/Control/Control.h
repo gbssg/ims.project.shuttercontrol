@@ -2,7 +2,20 @@
 
 #include <Motor.h>
 #include <SparkFun_Qwiic_Button.h>
+#include <SimpleStateProcessor.h>
 
+// enum for control ssp
+typedef enum eControlState
+{
+  CONTROL_ST_UNKNOWN = 0,
+  CONTROL_ST_IDLE,
+  CONTROL_ST_GOINGUP,
+  CONTROL_ST_GOINGDOWN,
+
+  CONTROL_ST_COUNT
+} tControlState;
+
+// struct for the button addresses
 typedef struct sAddressDescriptor
 {
     uint8_t addrB1;
@@ -22,10 +35,12 @@ typedef struct sButton
 
 typedef struct sControl
 {
-    tSSP_Control * ssp;
+    SimpleStateProcessor * ssp;
     tMotor * motor;
     const tAddressDescriptor * desc;
     tButton * button;
 }tControl;
 
-void setupControl(tControl * me, tMotor * motor, int addressNr, QwiicButton buttonUp, QwiicButton buttonDown);
+extern const tSSP_State ControlStateMachine[];
+
+void setupControl(tControl * me, tMotor * motor, int addressNr, tButton * button);
