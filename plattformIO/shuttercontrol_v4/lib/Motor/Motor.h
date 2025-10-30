@@ -14,14 +14,9 @@ typedef struct sChannelDescriptor
     int pinR2;
 }tChannelDescriptor;
 
-typedef struct sSSP_Motor
-{
-
-}tSSP_Motor;
-
 typedef struct sMotor
 {
-    tSSP_Motor * ssp;
+    SimpleStateProcessor * ssp;
     const tChannelDescriptor * desc;
 }tMotor;
 
