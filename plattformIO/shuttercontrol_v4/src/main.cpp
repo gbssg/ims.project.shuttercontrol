@@ -18,15 +18,16 @@ void setup()
     buttonGrp1.up = &buttonUp1;
     buttonGrp1.down = &buttonDown1; 
     motor1.strategy = &MotorQR; // setting up the strategy
-    motor1.strategy->setup(&motor1, 0); // setting up the relay number
+    motor1.strategy->setup(&motor1, 0); // setting up the relay numbers
+    control1.ssp = &Control1;
     // setupMotor(&motor1, 0);
     setupControl(&control1, &motor1, 0, &buttonGrp1);
     Serial.println("Setup Complete!");
-    Control1.reset();
+    control1.ssp->reset();
 }
 
 void loop() 
 {
-    Control1.run();
+    control1.ssp->run();
 }
 
