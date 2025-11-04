@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include <SimpleStateProcessor.h>
+#include "MotroInterface.h"
 
 
 // void GoUp();
@@ -9,17 +10,10 @@
 // void Stop();
 // uintptr_t getState();
 
-typedef struct sChannelDescriptor
-{
-    int pinR1;
-    int pinR2;
-}tChannelDescriptor;
 
-typedef struct sMotor
-{
-    SimpleStateProcessor * ssp;
-    const tChannelDescriptor * desc;
-}tMotor;
+static void setupMotor(tMotor * motor, int channel);
+static void Up();
+static void Down();
+static void Stop();
 
-
-void Motor(tMotor * motor, int channel);
+extern tMotorStrategy MotorQR;

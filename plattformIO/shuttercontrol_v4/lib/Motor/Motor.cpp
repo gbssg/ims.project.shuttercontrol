@@ -10,7 +10,29 @@ const tChannelDescriptor channels[] = {
     {.pinR1 = 3, .pinR2 = 4}
 };
 
-void Motor(tMotor * me, int channel)
+static void setupMotor(tMotor * me, int channel)
 {
     me->desc = &channels[channel];
 }
+
+static void Up()
+{
+    Serial.println("MotorSt1 Up");
+}
+
+static void Down()
+{
+    Serial.println("MotorSt1 Down");
+}
+
+static void Stop()
+{
+    Serial.println("MotorSt1 Down");
+}
+
+tMotorStrategy MotorQR = {
+    .up = Up,
+    .down = Down,
+    .stop = Stop,
+    .setup = setupMotor
+};
