@@ -9,4 +9,5 @@ struct sIMotor
     tIMotor_Dir up;
     tIMotor_Dir down;
     tIMotor_Dir stop;
+    // TODO: Add state return function
 };
