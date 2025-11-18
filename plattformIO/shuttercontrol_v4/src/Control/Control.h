@@ -39,7 +39,6 @@ struct sControl
 {
     SimpleStateProcessor *ssp;
     const tButtonDescriptor *button;
-    // TODO: Ask if this needs to be a pointer
     // tControl_GetState getState;
     // TODO: is the setup needed or should i just make it in init?
     tControl_Setup setup;
