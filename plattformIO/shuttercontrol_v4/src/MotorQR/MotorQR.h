@@ -8,3 +8,8 @@ void MotorQR_destroy(tMotorQR *me);
 
 void MotorQR_init(tMotorQR *me);
 void MotorQR_deinit(tMotorQR *me);
+
+struct sMotorQR
+{
+    tIMotor motor;
+};

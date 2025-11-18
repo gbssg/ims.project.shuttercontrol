@@ -1,11 +1,6 @@
 #include "MotorQR.h"
 #include <Arduino.h>
 
-struct sMotorQR
-{
-    tIMotor motor;
-};
-
 void Up(tIMotor *me){
 
 }
