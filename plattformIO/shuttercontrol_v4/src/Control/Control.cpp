@@ -1,17 +1,13 @@
 #include "Control.h"
 #include <Arduino.h>
 
-struct sControl
-{
-    SimpleStateProcessor *ssp;
-    tButtonDescriptor *buttons;
-    // TODO: Ask if this needs to be a pointer
-    // tControl_GetState getState;
-    // TODO: is the setup needed or should i just make it in init?
-    tControl_Setup setup;
-    tControl_Run run;
-    // TODO: Add state return function
-};
+void Run(tControl *me){
+    
+}
+
+void Setup(tControl *me){
+
+}
 
 SSP_STATE_HANDLER(ControlStateUnknown);
 SSP_STATE_HANDLER(ControlStateIdle);
@@ -44,6 +40,7 @@ tControl *Control_create(uint8_t buttonGrpNr)
     result = NULL;
 
 err_no_memory:
+    Serial.print("Error no Memory");
     return result;
 }
 void Control_destroy(tControl *me)
@@ -58,9 +55,30 @@ void Control_destroy(tControl *me)
 void Control_init(tControl *me, uint8_t buttonGrpNr)
 {
     me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
-    buttons[buttonGrpNr];
+    me->button = &buttons[buttonGrpNr];
+    me->run = Run;
+    me->setup = Setup;
 }
 void Control_deinit(tControl *me)
 {
     // TODO: Find out what needs to be in the deinit
+}
+
+SSP_STATE_HANDLER(ControlStateUnknown){
+return 0;
+}
+
+SSP_STATE_HANDLER(ControlStateIdle)
+{
+return 0;
+}
+
+SSP_STATE_HANDLER(ControlStateGoingUp)
+{
+return 0;
+}
+
+SSP_STATE_HANDLER(ControlStateGoingDown)
+{
+return 0;
 }
