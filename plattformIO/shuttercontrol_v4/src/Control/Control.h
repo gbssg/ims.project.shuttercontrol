@@ -15,7 +15,7 @@ const tButtonDescriptor buttons[] = {
 };
 
 
-tControl *Control_create();
+tControl *Control_create(SimpleStateProcessor *ssp, uint8_t buttonGrpNr);
 void Control_destroy(tControl *me);
 
 void Control_init(tControl *me);
@@ -23,17 +23,14 @@ void Control_deinit(tControl *me);
 
 // typedef void (* tControl_GetState)(tControl *me);
 typedef void (* tControl_Setup)(tControl * me);
-typedef void (* tControl_Run)(tControl * me);
+typedef int (* tControl_Run)(tControl * me);
 
-
-
-struct sControl
+typedef enum eControlState
 {
-    SimpleStateProcessor ssp;
-    uint8_t buttonGroup;
-    // TODO: Ask if this needs to be a pointer
-    // tControl_GetState getState;
-    tControl_Setup setup;
-    tControl_Run run;
-    // TODO: Add state return function
-};
+  CONTROL_ST_UNKNOWN = 0,
+  CONTROL_ST_IDLE,
+  CONTROL_ST_GOINGUP,
+  CONTROL_ST_GOINGDOWN,
+
+  CONTROL_ST_COUNT
+} tControlState;
