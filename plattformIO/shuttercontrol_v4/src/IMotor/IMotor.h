@@ -3,9 +3,6 @@
 typedef struct sIMotor tIMotor;
 
 typedef void (* tIMotor_Dir)(tIMotor *me);
-typedef void (* tIMotor_Dir)(tIMotor *me);
-typedef void (* tIMotor_Dir)(tIMotor * me);
-typedef 
 
 struct sIMotor
 {
