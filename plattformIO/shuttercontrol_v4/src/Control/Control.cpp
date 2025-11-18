@@ -22,8 +22,7 @@ static const tSSP_State ControlStateMachine[] = {
 
     SSP_STATE_LAST()};
 
-tControl *Control_create(uint8_t buttonGrpNr)
-{
+tControl *Control_create(uint8_t buttonGrpNr){
     tControl *result = NULL;
 
     result = (tControl *)calloc(1, sizeof(tControl));
@@ -43,8 +42,7 @@ err_no_memory:
     Serial.print("Error no Memory");
     return result;
 }
-void Control_destroy(tControl *me)
-{
+void Control_destroy(tControl *me){
     if (me != NULL)
     {
         free(me);
@@ -52,33 +50,85 @@ void Control_destroy(tControl *me)
     }
 }
 
-void Control_init(tControl *me, uint8_t buttonGrpNr)
-{
+void Control_init(tControl *me, uint8_t buttonGrpNr){
+    // TODO: Add the context to the Processor
     me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
     me->button = &buttons[buttonGrpNr];
     me->run = Run;
     me->setup = Setup;
 }
-void Control_deinit(tControl *me)
-{
+void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit
 }
 
 SSP_STATE_HANDLER(ControlStateUnknown){
-return 0;
+    switch (reason)
+    {
+    case SSP_REASON_ENTER:
+        /* code */
+        break;
+    case SSP_REASON_DO:
+        /* code */
+        break;
+    case SSP_REASON_EXIT:
+        /* code */
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
 
-SSP_STATE_HANDLER(ControlStateIdle)
-{
-return 0;
+SSP_STATE_HANDLER(ControlStateIdle){
+    switch (reason)
+    {
+    case SSP_REASON_ENTER:
+        /* code */
+        break;
+    case SSP_REASON_DO:
+        /* code */
+        break;
+    case SSP_REASON_EXIT:
+        /* code */
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
 
-SSP_STATE_HANDLER(ControlStateGoingUp)
-{
-return 0;
+SSP_STATE_HANDLER(ControlStateGoingUp){
+    switch (reason)
+    {
+    case SSP_REASON_ENTER:
+        /* code */
+        break;
+    case SSP_REASON_DO:
+        /* code */
+        break;
+    case SSP_REASON_EXIT:
+        /* code */
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
 
-SSP_STATE_HANDLER(ControlStateGoingDown)
-{
-return 0;
+SSP_STATE_HANDLER(ControlStateGoingDown){
+    switch (reason)
+    {
+    case SSP_REASON_ENTER:
+        /* code */
+        break;
+    case SSP_REASON_DO:
+        /* code */
+        break;
+    case SSP_REASON_EXIT:
+        /* code */
+        break;
+    default:
+        break;
+    }
+    return 0;
 }
