@@ -73,9 +73,10 @@ void MotorQR_init(tMotorQR *me, int channelNr)
     me->timer->start(1000);
     me->ssp->reset();
     me->ssp->run();
-    me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
-    me->ssp->run();
-    Serial.print(me->ssp->CurrentStateNameGet());
+    // SSP Test Code
+    // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
+    // me->ssp->run();
+    // Serial.print(me->ssp->CurrentStateNameGet());
 }
 void MotorQR_deinit(tMotorQR *me)
 {
