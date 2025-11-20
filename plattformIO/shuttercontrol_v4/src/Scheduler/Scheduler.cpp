@@ -9,3 +9,7 @@ void addRunable(int value){
 
 void listRunable(){
 }
+
+void runAll(){
+
+}
