@@ -37,11 +37,11 @@ typedef enum eControlState
 
 struct sControl
 {
-    SimpleStateProcessor *ssp;
+    SimpleStateProcessor    *ssp;
     const tButtonDescriptor *button;
-    // tControl_GetState getState;
-    // TODO: is the setup needed or should i just make it in init?
-    tControl_Setup setup;
-    tControl_Run run;
+    // TODO: is the setup needed or should i just make it in init? or call it in init
+    tControl_Setup           setup;
+    tControl_Run             run;
     // TODO: Add state return function
+    // tControl_GetState getState;
 };
