@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Arduino.h>
+
 typedef struct sIMotor tIMotor;
 
 typedef void (* tIMotor_Dir)(tIMotor *me);
