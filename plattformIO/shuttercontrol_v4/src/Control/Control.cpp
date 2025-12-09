@@ -45,6 +45,7 @@ err_no_memory:
 void Control_destroy(tControl *me){
     if (me != NULL)
     {
+        //TODO: Think about the SSP maby deinit
         free(me);
         me = NULL;
     }
