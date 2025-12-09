@@ -1,12 +1,14 @@
 #pragma once
 #include <SimpleStateProcessor.h>
+#include <SparkFun_Qwiic_Button.h>
+#include "IMotor/IMotor.h"
 
 typedef struct sControl tControl;
 
 typedef struct sButtonDescriptor
 {
-    uint8_t addrUp;
-    uint8_t addrDown;
+    uint8_t      addrUp;
+    uint8_t      addrDown;
 }tButtonDescriptor;
 
 const tButtonDescriptor buttons[] = {
@@ -15,7 +17,7 @@ const tButtonDescriptor buttons[] = {
 };
 
 
-tControl *Control_create(uint8_t buttonGrpNr);
+tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor);
 void Control_destroy(tControl *me);
 
 void Control_init(tControl *me, uint8_t buttonGrpNr);
@@ -42,6 +44,9 @@ struct sControl
     // TODO: is the setup needed or should i just make it in init? or call it in init
     tControl_Setup           setup;
     tControl_Run             run;
+    QwiicButton             *buttonUp;
+    QwiicButton             *buttonDown;
+    tIMotor                 *motor;
     // TODO: Add state return function
     // tControl_GetState getState;
 };

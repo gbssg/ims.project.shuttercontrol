@@ -51,25 +51,32 @@ void Control_destroy(tControl *me){
     }
 }
 
-void Control_init(tControl *me, uint8_t buttonGrpNr){
+void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     // TODO: Add the context to the Processor
-    me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, 0);
+    me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, me);
     me->button = &buttons[buttonGrpNr];
     me->run = Run;
     me->setup = Setup;
+    me->buttonUp = new QwiicButton();
+    me->buttonDown = new QwiicButton();
+    me->buttonUp->begin(me->button->addrUp);
+    me->buttonDown->begin(me->button->addrDown);
+    me->motor = motor;
 }
 void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit
 }
 
 SSP_STATE_HANDLER(ControlStateUnknown){
+    tControl *me = (tControl*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        me->buttonUp->LEDoff();
+        me->buttonDown->LEDoff();
+        fsm->NextStateSet(CONTROL_ST_IDLE);
         break;
     case SSP_REASON_DO:
-        /* code */
         break;
     case SSP_REASON_EXIT:
         /* code */
@@ -81,10 +88,10 @@ SSP_STATE_HANDLER(ControlStateUnknown){
 }
 
 SSP_STATE_HANDLER(ControlStateIdle){
+    tControl *me = (tControl*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
         break;
     case SSP_REASON_DO:
         /* code */
@@ -99,6 +106,7 @@ SSP_STATE_HANDLER(ControlStateIdle){
 }
 
 SSP_STATE_HANDLER(ControlStateGoingUp){
+    tControl *me = (tControl*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -117,6 +125,7 @@ SSP_STATE_HANDLER(ControlStateGoingUp){
 }
 
 SSP_STATE_HANDLER(ControlStateGoingDown){
+    tControl *me = (tControl*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
