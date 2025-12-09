@@ -4,9 +4,9 @@
 
 typedef struct sIMotor tIMotor;
 
-typedef void (* tIMotor_Dir)(tIMotor *me);
-typedef uintptr_t (* tIMotor_GetState)(tIMotor *me);
-typedef const char * (* tIMotor_GetStateName)(tIMotor *me);
+typedef void (* tIMotor_Dir)(void *context);
+typedef uintptr_t (* tIMotor_GetState)(void *context);
+typedef const char * (* tIMotor_GetStateName)(void *context);
 
 struct sIMotor
 {
