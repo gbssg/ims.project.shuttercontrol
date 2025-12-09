@@ -1,4 +1,5 @@
 #pragma once
+#include <Arduino.h>
 #include "IMotor/IMotor.h"
 #include <SimpleStateProcessor.h>
 #include <SimpleSoftTimer.h>
@@ -6,7 +7,14 @@ using namespace HolisticSolutions;
 
 typedef struct sMotorQR tMotorQR;
 
+enum eCommand{
+    NONE,
+    UP,
+    DOWN,
+    STOP
+};
 
+typedef enum eCommand tCommand;
 
 tMotorQR *MotorQR_create(int channelNr);
 void MotorQR_destroy(tMotorQR *me);
@@ -45,4 +53,5 @@ struct sMotorQR
     const tChannelDescriptor *channel;
     SimpleStateProcessor *ssp;
     SimpleSoftTimer *timer;
+    eCommand command;
 };
