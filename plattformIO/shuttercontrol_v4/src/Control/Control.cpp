@@ -1,6 +1,8 @@
 #include "Control.h"
 #include <Arduino.h>
 
+const int timeout = 300;
+
 void Run(tControl *me){
     
 }
@@ -22,7 +24,7 @@ static const tSSP_State ControlStateMachine[] = {
 
     SSP_STATE_LAST()};
 
-tControl *Control_create(uint8_t buttonGrpNr){
+tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor){
     tControl *result = NULL;
 
     result = (tControl *)calloc(1, sizeof(tControl));
@@ -31,7 +33,7 @@ tControl *Control_create(uint8_t buttonGrpNr){
         goto err_no_memory;
     }
 
-    Control_init(result, buttonGrpNr);
+    Control_init(result, buttonGrpNr, motor);
 
     return result;
 
@@ -61,10 +63,30 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     me->buttonDown = new QwiicButton();
     me->buttonUp->begin(me->button->addrUp);
     me->buttonDown->begin(me->button->addrDown);
+    me->buttonUp->enableClickedInterrupt();
+    me->buttonDown->enableClickedInterrupt();
     me->motor = motor;
+    me->timerPressed = new SimpleSoftTimer(timeout);
+    me->timerPressed->start(timeout);
+
 }
 void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit
+}
+
+int checkButton(QwiicButton* button){
+    if (!button->isClickedQueueEmpty()){
+        button->LEDon(100);
+        while (!button->isClickedQueueEmpty())
+        {
+            button->popClickedQueue();
+        }
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 SSP_STATE_HANDLER(ControlStateUnknown){
@@ -72,6 +94,7 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        Serial.println("Control Unknown");
         me->buttonUp->LEDoff();
         me->buttonDown->LEDoff();
         fsm->NextStateSet(CONTROL_ST_IDLE);
@@ -79,7 +102,7 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     case SSP_REASON_DO:
         break;
     case SSP_REASON_EXIT:
-        /* code */
+        me->timerPressed->restart();
         break;
     default:
         break;
@@ -92,9 +115,37 @@ SSP_STATE_HANDLER(ControlStateIdle){
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        Serial.println("Control Idle");
         break;
     case SSP_REASON_DO:
-        /* code */
+        if (checkButton(me->buttonUp))
+        {
+            fsm->NextStateSet(CONTROL_ST_GOINGUP);
+        }
+        
+        // if (!me->buttonUp->isClickedQueueEmpty()){
+        //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
+        //     me->buttonUp->LEDon(100);
+        //     while (!me->buttonUp->isClickedQueueEmpty())
+        //     {
+        //         me->buttonUp->popClickedQueue();
+        //     }
+        // }
+
+        // if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
+        // {
+        //     me->timerPressed->restart();
+        //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
+        // }
+        if (checkButton(me->buttonUp))
+        {
+            fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
+        }
+        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
+        {
+            me->timerPressed->restart();
+            fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
+        }
         break;
     case SSP_REASON_EXIT:
         /* code */
@@ -110,13 +161,23 @@ SSP_STATE_HANDLER(ControlStateGoingUp){
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Control GoUp");
+        me->buttonUp->LEDon(100);
         break;
     case SSP_REASON_DO:
-        /* code */
+        if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
+        {
+            me->timerPressed->restart();
+            fsm->NextStateSet(CONTROL_ST_IDLE);
+        }
+        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
+        {
+            me->timerPressed->restart();
+            fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
+        }
         break;
     case SSP_REASON_EXIT:
-        /* code */
+        me->buttonUp->LEDoff();
         break;
     default:
         break;
@@ -129,13 +190,23 @@ SSP_STATE_HANDLER(ControlStateGoingDown){
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Control GoDown");
+        me->buttonDown->LEDon(100);
         break;
     case SSP_REASON_DO:
-        /* code */
+        if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
+        {
+            me->timerPressed->restart();
+            fsm->NextStateSet(CONTROL_ST_GOINGUP);
+        }
+        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
+        {
+            me->timerPressed->restart();
+            fsm->NextStateSet(CONTROL_ST_IDLE);
+        }
         break;
     case SSP_REASON_EXIT:
-        /* code */
+        me->buttonDown->LEDoff();
         break;
     default:
         break;
