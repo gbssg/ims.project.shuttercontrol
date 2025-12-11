@@ -1,8 +1,6 @@
 #include "Control.h"
 #include <Arduino.h>
 
-const int timeout = 300;
-
 void Run(tControl *me){
     
 }
@@ -66,9 +64,6 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     me->buttonUp->enableClickedInterrupt();
     me->buttonDown->enableClickedInterrupt();
     me->motor = motor;
-    me->timerPressed = new SimpleSoftTimer(timeout);
-    me->timerPressed->start(timeout);
-
 }
 void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit
@@ -102,7 +97,6 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     case SSP_REASON_DO:
         break;
     case SSP_REASON_EXIT:
-        me->timerPressed->restart();
         break;
     default:
         break;
