@@ -26,4 +26,5 @@ struct sIMotor
     tIMotor_GetState     getState;
     tIMotor_GetStateName getStateName;
     eCommand command;
+    void *context;
 };
