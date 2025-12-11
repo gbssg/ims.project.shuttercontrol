@@ -113,6 +113,7 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control Unknown");
+        me->motor->stop(me->motor);
         me->buttonUp->LEDoff();
         me->buttonDown->LEDoff();
         fsm->NextStateSet(CONTROL_ST_IDLE);
@@ -133,6 +134,7 @@ SSP_STATE_HANDLER(ControlStateIdle){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control Idle");
+        me->motor->stop(me->motor);
         break;
     case SSP_REASON_DO:
         if (checkButton(me->buttonUp, me))
@@ -176,6 +178,7 @@ SSP_STATE_HANDLER(ControlStateGoingUp){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control GoUp");
+        me->motor->up(me->motor);
         me->buttonUp->LEDon(100);
         break;
     case SSP_REASON_DO:
@@ -204,6 +207,7 @@ SSP_STATE_HANDLER(ControlStateGoingDown){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control GoDown");
+        me->motor->down(me->motor);
         me->buttonDown->LEDon(100);
         break;
     case SSP_REASON_DO:
