@@ -9,6 +9,21 @@ void Setup(tControl *me){
 
 }
 
+int checkButton(QwiicButton* button){
+    if (!button->isClickedQueueEmpty()){
+        button->LEDon(100);
+        while (!button->isClickedQueueEmpty())
+        {
+            button->popClickedQueue();
+        }
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 SSP_STATE_HANDLER(ControlStateUnknown);
 SSP_STATE_HANDLER(ControlStateIdle);
 SSP_STATE_HANDLER(ControlStateGoingUp);
@@ -67,21 +82,6 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
 }
 void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit
-}
-
-int checkButton(QwiicButton* button){
-    if (!button->isClickedQueueEmpty()){
-        button->LEDon(100);
-        while (!button->isClickedQueueEmpty())
-        {
-            button->popClickedQueue();
-        }
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
 }
 
 SSP_STATE_HANDLER(ControlStateUnknown){
