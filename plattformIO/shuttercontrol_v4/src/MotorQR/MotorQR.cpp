@@ -188,6 +188,9 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
             break;
         default:
             me->command = NONE;
+            if (motor->timer->isTimeout()){
+                fsm->NextStateSet(MOTOR_ST_IDLE);
+            }
             break;
         }
         break;
@@ -225,6 +228,9 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
             break;
         default:
             me->command = NONE;
+            if (motor->timer->isTimeout()){
+                fsm->NextStateSet(MOTOR_ST_IDLE);
+            }
             break;
         }
         break;
@@ -268,6 +274,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
         break;
     case SSP_REASON_EXIT:
         motor->relay->turnRelayOff(motor->channel->relayUp);
+        motor->timer->restart();
         break;
     default:
         break;
@@ -306,6 +313,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
         break;
     case SSP_REASON_EXIT:
         motor->relay->turnRelayOff(motor->channel->relayDown);
+        motor->timer->restart();
         break;
     default:
         break;
@@ -337,6 +345,9 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
             break;
         default:
             me->command = NONE;
+            if (motor->timer->isTimeout()){
+                fsm->NextStateSet(MOTOR_ST_GOINGDOWN);
+            }
             break;
         }
         break;
@@ -373,6 +384,9 @@ SSP_STATE_HANDLER(MotorStateWaitDown)
             break;
         default:
             me->command = NONE;
+            if (motor->timer->isTimeout()){
+                fsm->NextStateSet(MOTOR_ST_GOINGUP);
+            }
             break;
         }
         break;
