@@ -74,13 +74,21 @@ void MotorQR_init(tMotorQR *me, int channelNr)
     me->motor.down = Down;
     me->motor.stop = Stop;
     me->motor.command = NONE;
-    // TODO: Add the context to the Processor
+    me->motor.context = me;
+    me->relayAddress = 0x6D;
+    me->relay = new Qwiic_Relay(me->relayAddress);
+    if (!me->relay->begin())
+    {
+        Serial.print("Relay did not respond");
+        while (1);
+    }
     me->ssp = new SimpleStateProcessor(MOTOR_ST_UNKNOWN, MotorStateMachine, me);
     me->channel = &channels[channelNr];
     me->timer = new SimpleSoftTimer(1000);
     me->timer->start(1000);
     me->ssp->reset();
     me->ssp->run();
+    
     // SSP Test Code
     // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
     // me->ssp->run();
@@ -98,10 +106,12 @@ void MotorQR_deinit(tMotorQR *me)
 SSP_STATE_HANDLER(MotorStateUnknown)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
         Serial.println("Unknown");
+        motor->relay->turnAllRelaysOff();
         fsm->NextStateSet(MOTOR_ST_IDLE);
         break;
     case SSP_REASON_DO:
@@ -119,6 +129,7 @@ SSP_STATE_HANDLER(MotorStateUnknown)
 SSP_STATE_HANDLER(MotorStateIdle)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -155,10 +166,11 @@ SSP_STATE_HANDLER(MotorStateIdle)
 SSP_STATE_HANDLER(MotorStateIdleUp)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Motor Idle Up");
         break;
     case SSP_REASON_DO:
         switch (me->command)
@@ -191,10 +203,11 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
 SSP_STATE_HANDLER(MotorStateIdleDown)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Motor Idle Down");
         break;
     case SSP_REASON_DO:
         switch (me->command)
@@ -227,10 +240,12 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
 SSP_STATE_HANDLER(MotorStateGoingUp)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
         Serial.println("Going Up");
+        motor->relay->turnRelayOn(motor->channel->relayUp);
         break;
     case SSP_REASON_DO:
         switch (me->command)
@@ -252,7 +267,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
+        motor->relay->turnRelayOff(motor->channel->relayUp);
         break;
     default:
         break;
@@ -263,10 +278,12 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
 SSP_STATE_HANDLER(MotorStateGoingDown)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
         Serial.println("Going Down");
+        motor->relay->turnRelayOn(motor->channel->relayDown);
         break;
     case SSP_REASON_DO:
         switch (me->command)
@@ -288,7 +305,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
+        motor->relay->turnRelayOff(motor->channel->relayDown);
         break;
     default:
         break;
@@ -299,10 +316,11 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
 SSP_STATE_HANDLER(MotorStateWaitUp)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Motor Wait Up");
         break;
     case SSP_REASON_DO:
         switch (me->command)
@@ -334,10 +352,11 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
 SSP_STATE_HANDLER(MotorStateWaitDown)
 {
     tIMotor *me = (tIMotor*)context;
+    tMotorQR *motor = (tMotorQR*)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
-        /* code */
+        Serial.println("Motor Wait Down");
         break;
     case SSP_REASON_DO:
         switch (me->command)
