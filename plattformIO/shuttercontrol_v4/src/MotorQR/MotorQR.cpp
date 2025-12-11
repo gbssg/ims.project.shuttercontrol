@@ -1,19 +1,19 @@
 #include "MotorQR.h"
 #include <Arduino.h>
 
-void Up(void *context)
+void Up(tIMotor *context)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = context;
     me->command = UP;
 }
-void Down(void *context)
+void Down(tIMotor *context)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = context;
     me->command = DOWN;
 }
-void Stop(void *context)
+void Stop(tIMotor *context)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = context;
     me->command = STOP;
 }
 
@@ -73,7 +73,7 @@ void MotorQR_init(tMotorQR *me, int channelNr)
     me->motor.up = Up;
     me->motor.down = Down;
     me->motor.stop = Stop;
-    me->command = NONE;
+    me->motor.command = NONE;
     // TODO: Add the context to the Processor
     me->ssp = new SimpleStateProcessor(MOTOR_ST_UNKNOWN, MotorStateMachine, me);
     me->channel = &channels[channelNr];
@@ -97,7 +97,7 @@ void MotorQR_deinit(tMotorQR *me)
 
 SSP_STATE_HANDLER(MotorStateUnknown)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -118,7 +118,7 @@ SSP_STATE_HANDLER(MotorStateUnknown)
 
 SSP_STATE_HANDLER(MotorStateIdle)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -154,7 +154,7 @@ SSP_STATE_HANDLER(MotorStateIdle)
 
 SSP_STATE_HANDLER(MotorStateIdleUp)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -190,7 +190,7 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
 
 SSP_STATE_HANDLER(MotorStateIdleDown)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -226,7 +226,7 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
 
 SSP_STATE_HANDLER(MotorStateGoingUp)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -262,7 +262,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
 
 SSP_STATE_HANDLER(MotorStateGoingDown)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -298,7 +298,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
 
 SSP_STATE_HANDLER(MotorStateWaitUp)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -333,7 +333,7 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
 
 SSP_STATE_HANDLER(MotorStateWaitDown)
 {
-    tMotorQR *me = (tMotorQR*)context;
+    tIMotor *me = (tIMotor*)context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
