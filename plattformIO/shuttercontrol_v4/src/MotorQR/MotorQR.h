@@ -3,6 +3,7 @@
 #include "IMotor/IMotor.h"
 #include <SimpleStateProcessor.h>
 #include <SimpleSoftTimer.h>
+#include <SparkFun_Qwiic_Relay.h>
 using namespace HolisticSolutions;
 
 typedef struct sMotorQR tMotorQR;
@@ -41,7 +42,9 @@ typedef enum eMotorState
 struct sMotorQR
 {
     tIMotor motor;
+    uint8_t relayAddress;
     const tChannelDescriptor *channel;
     SimpleStateProcessor *ssp;
     SimpleSoftTimer *timer;
+    Qwiic_Relay *relay;
 };
