@@ -81,8 +81,16 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     me->setup = Setup;
     me->buttonUp = new QwiicButton();
     me->buttonDown = new QwiicButton();
-    me->buttonUp->begin(me->button->addrUp);
-    me->buttonDown->begin(me->button->addrDown);
+    if (!me->buttonUp->begin(me->button->addrUp))
+    {
+        Serial.printf("Button at address 0x%X did not Respond Freezing\n", me->button->addrUp);
+        while (1);
+    }
+    if (!me->buttonDown->begin(me->button->addrUp))
+    {
+        Serial.printf("Button at address 0x%X did not Respond Freezing\n", me->button->addrUp);
+        while (1);
+    }
     me->buttonUp->enableClickedInterrupt();
     me->buttonDown->enableClickedInterrupt();
     me->buttonUp->enablePressedInterrupt();
