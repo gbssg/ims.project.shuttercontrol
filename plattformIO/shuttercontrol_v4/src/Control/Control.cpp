@@ -95,8 +95,8 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control Unknown");
-        me->buttonUp->LEDoff();
-        me->buttonDown->LEDoff();
+        // me->buttonUp->LEDoff();
+        // me->buttonDown->LEDoff();
         fsm->NextStateSet(CONTROL_ST_IDLE);
         break;
     case SSP_REASON_DO:
@@ -138,7 +138,7 @@ SSP_STATE_HANDLER(ControlStateIdle){
         //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
         // }
         
-        if (checkButton(me->buttonUp))
+        if (checkButton(me->buttonDown))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
         }
@@ -162,14 +162,13 @@ SSP_STATE_HANDLER(ControlStateGoingUp){
         me->buttonUp->LEDon(100);
         break;
     case SSP_REASON_DO:
-        if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
+        if (checkButton(me->buttonUp))
         {
-            me->timerPressed->restart();
             fsm->NextStateSet(CONTROL_ST_IDLE);
         }
-        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
+
+        if (checkButton(me->buttonDown))
         {
-            me->timerPressed->restart();
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
         }
         break;
@@ -191,14 +190,13 @@ SSP_STATE_HANDLER(ControlStateGoingDown){
         me->buttonDown->LEDon(100);
         break;
     case SSP_REASON_DO:
-        if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
+        if (checkButton(me->buttonUp))
         {
-            me->timerPressed->restart();
             fsm->NextStateSet(CONTROL_ST_GOINGUP);
         }
-        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
+
+        if (checkButton(me->buttonDown))
         {
-            me->timerPressed->restart();
             fsm->NextStateSet(CONTROL_ST_IDLE);
         }
         break;
