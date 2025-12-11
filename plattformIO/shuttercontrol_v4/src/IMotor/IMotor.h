@@ -4,9 +4,18 @@
 
 typedef struct sIMotor tIMotor;
 
-typedef void (* tIMotor_Dir)(void *context);
-typedef uintptr_t (* tIMotor_GetState)(void *context);
-typedef const char * (* tIMotor_GetStateName)(void *context);
+enum eCommand{
+    NONE,
+    UP,
+    DOWN,
+    STOP
+};
+
+typedef enum eCommand tCommand;
+
+typedef void (* tIMotor_Dir)(tIMotor *context);
+typedef uintptr_t (* tIMotor_GetState)(tIMotor *context);
+typedef const char * (* tIMotor_GetStateName)(tIMotor *context);
 
 struct sIMotor
 {
@@ -16,4 +25,5 @@ struct sIMotor
     // TODO: Add state return function and Implementation in all Classes (is get State Needed as Name or number?)
     tIMotor_GetState     getState;
     tIMotor_GetStateName getStateName;
+    eCommand command;
 };
