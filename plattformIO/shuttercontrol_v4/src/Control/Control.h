@@ -20,7 +20,7 @@ const tButtonDescriptor buttons[] = {
 tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor);
 void Control_destroy(tControl *me);
 
-void Control_init(tControl *me, uint8_t buttonGrpNr);
+void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor);
 void Control_deinit(tControl *me);
 
 // typedef void (* tControl_GetState)(tControl *me);
