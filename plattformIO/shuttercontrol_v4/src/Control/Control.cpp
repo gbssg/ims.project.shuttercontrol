@@ -137,15 +137,12 @@ SSP_STATE_HANDLER(ControlStateIdle){
         //     me->timerPressed->restart();
         //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
         // }
+        
         if (checkButton(me->buttonUp))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
         }
-        if (me->buttonDown->isPressed() && me->timerPressed->isTimeout())
-        {
-            me->timerPressed->restart();
-            fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
-        }
+        
         break;
     case SSP_REASON_EXIT:
         /* code */
