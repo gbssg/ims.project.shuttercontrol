@@ -78,6 +78,9 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     me->buttonDown->begin(me->button->addrDown);
     me->buttonUp->enableClickedInterrupt();
     me->buttonDown->enableClickedInterrupt();
+    // Chech button clears Queue
+    checkButton(me->buttonUp);
+    checkButton(me->buttonDown);
     me->motor = motor;
 }
 void Control_deinit(tControl *me){
