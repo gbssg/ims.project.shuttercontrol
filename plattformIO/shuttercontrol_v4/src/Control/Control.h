@@ -1,7 +1,9 @@
 #pragma once
 #include <SimpleStateProcessor.h>
+#include <SimpleSoftTimer.h>
 #include <SparkFun_Qwiic_Button.h>
 #include "IMotor/IMotor.h"
+using namespace HolisticSolutions;
 
 typedef struct sControl tControl;
 
@@ -47,6 +49,7 @@ struct sControl
     QwiicButton             *buttonUp;
     QwiicButton             *buttonDown;
     tIMotor                 *motor;
+    SimpleSoftTimer         *timerPressed;
     // TODO: Add state return function
     // tControl_GetState getState;
 };

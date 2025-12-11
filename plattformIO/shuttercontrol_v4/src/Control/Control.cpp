@@ -1,6 +1,8 @@
 #include "Control.h"
 #include <Arduino.h>
 
+const int timeout = 300;
+
 void Run(tControl *me){
     
 }
@@ -9,17 +11,22 @@ void Setup(tControl *me){
 
 }
 
-int checkButton(QwiicButton* button){
-    if (!button->isClickedQueueEmpty()){
+int checkButton(QwiicButton* button, tControl *me){
+    if (!button->isPressedQueueEmpty() && me->timerPressed->isTimeout()){
         button->LEDon(100);
-        while (!button->isClickedQueueEmpty())
+        while (!button->isPressedQueueEmpty())
         {
-            button->popClickedQueue();
+            button->popPressedQueue();
         }
+        me->timerPressed->restart();
         return 1;
     }
     else
     {
+        while (!button->isPressedQueueEmpty())
+        {
+            button->popPressedQueue();
+        }
         return 0;
     }
 }
@@ -78,9 +85,14 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     me->buttonDown->begin(me->button->addrDown);
     me->buttonUp->enableClickedInterrupt();
     me->buttonDown->enableClickedInterrupt();
+    me->buttonUp->enablePressedInterrupt();
+    me->buttonDown->enablePressedInterrupt();
+    me->timerPressed = new SimpleSoftTimer(timeout);
+    me->timerPressed->start(timeout);
+    me->timerPressed->restart();
     // Chech button clears Queue
-    checkButton(me->buttonUp);
-    checkButton(me->buttonDown);
+    checkButton(me->buttonUp, me);
+    checkButton(me->buttonDown, me);
     me->motor = motor;
 }
 void Control_deinit(tControl *me){
@@ -93,8 +105,8 @@ SSP_STATE_HANDLER(ControlStateUnknown){
     {
     case SSP_REASON_ENTER:
         Serial.println("Control Unknown");
-        // me->buttonUp->LEDoff();
-        // me->buttonDown->LEDoff();
+        me->buttonUp->LEDoff();
+        me->buttonDown->LEDoff();
         fsm->NextStateSet(CONTROL_ST_IDLE);
         break;
     case SSP_REASON_DO:
@@ -115,7 +127,7 @@ SSP_STATE_HANDLER(ControlStateIdle){
         Serial.println("Control Idle");
         break;
     case SSP_REASON_DO:
-        if (checkButton(me->buttonUp))
+        if (checkButton(me->buttonUp, me))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGUP);
         }
@@ -135,7 +147,7 @@ SSP_STATE_HANDLER(ControlStateIdle){
         //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
         // }
         
-        if (checkButton(me->buttonDown))
+        if (checkButton(me->buttonDown, me))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
         }
@@ -159,12 +171,12 @@ SSP_STATE_HANDLER(ControlStateGoingUp){
         me->buttonUp->LEDon(100);
         break;
     case SSP_REASON_DO:
-        if (checkButton(me->buttonUp))
+        if (checkButton(me->buttonUp, me))
         {
             fsm->NextStateSet(CONTROL_ST_IDLE);
         }
 
-        if (checkButton(me->buttonDown))
+        if (checkButton(me->buttonDown, me))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
         }
@@ -187,12 +199,12 @@ SSP_STATE_HANDLER(ControlStateGoingDown){
         me->buttonDown->LEDon(100);
         break;
     case SSP_REASON_DO:
-        if (checkButton(me->buttonUp))
+        if (checkButton(me->buttonUp, me))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGUP);
         }
 
-        if (checkButton(me->buttonDown))
+        if (checkButton(me->buttonDown, me))
         {
             fsm->NextStateSet(CONTROL_ST_IDLE);
         }
