@@ -86,7 +86,7 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
         Serial.printf("Button at address 0x%X did not Respond Freezing\n", me->button->addrUp);
         while (1);
     }
-    if (!me->buttonDown->begin(me->button->addrUp))
+    if (!me->buttonDown->begin(me->button->addrDown))
     {
         Serial.printf("Button at address 0x%X did not Respond Freezing\n", me->button->addrUp);
         while (1);
