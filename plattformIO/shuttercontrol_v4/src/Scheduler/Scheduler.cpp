@@ -3,7 +3,7 @@
 
 //TODO: Make a list for the runables
 
-void addRunable(tProcess *head,tIRun *runnable){
+void addRunable(tProcess *head,tIRun *runnable, void *context){
     tProcess * current = head;
     while (current->next != NULL)
     {
@@ -12,6 +12,7 @@ void addRunable(tProcess *head,tIRun *runnable){
 
     current->next = (tProcess*)calloc(1, sizeof(tProcess));
     current->next->process = runnable;
+    current->next->process->context = context;
     current->next->next = NULL;
 }
 
@@ -22,8 +23,8 @@ void runAll(tProcess *head){
     tProcess *current = head->next;
     while (current->next != NULL)
     {
-        current->process->run(current->process);
+        current->process->run(current->process->context);
         current = current->next;
     }
-    current->process->run(current->process);
+    current->process->run(current->process->context);
 }

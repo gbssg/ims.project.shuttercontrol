@@ -11,7 +11,7 @@ struct  sProcess
     struct sProcess *next;
 };
 
-void runAll();
+void runAll(tProcess *head);
 
-void addRunable(int value);
-void listRunable();
+void addRunable(tProcess *head,tIRun *runnable, void *context);
+void listRunable(tProcess *head);
