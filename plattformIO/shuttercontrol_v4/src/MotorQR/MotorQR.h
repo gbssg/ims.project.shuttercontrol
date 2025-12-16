@@ -4,14 +4,16 @@
 #include <SimpleStateProcessor.h>
 #include <SimpleSoftTimer.h>
 #include <SparkFun_Qwiic_Relay.h>
+#include "IRun/IRun.h"
+#include "Scheduler/Scheduler.h"
 using namespace HolisticSolutions;
 
 typedef struct sMotorQR tMotorQR;
 
-tMotorQR *MotorQR_create(int channelNr);
+tMotorQR *MotorQR_create(int channelNr, tProcess *head);
 void MotorQR_destroy(tMotorQR *me);
 
-void MotorQR_init(tMotorQR *me, int channelNr);
+void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head);
 void MotorQR_deinit(tMotorQR *me);
 
 typedef struct sChannelDescriptor
@@ -44,7 +46,8 @@ struct sMotorQR
     tIMotor motor;
     uint8_t relayAddress;
     const tChannelDescriptor *channel;
-    SimpleStateProcessor *ssp;
-    SimpleSoftTimer *timer;
-    Qwiic_Relay *relay;
+    SimpleStateProcessor     *ssp;
+    SimpleSoftTimer          *timer;
+    Qwiic_Relay              *relay;
+    tIRun                     run;
 };

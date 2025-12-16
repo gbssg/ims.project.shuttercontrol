@@ -17,6 +17,11 @@ void Stop(tIMotor *context)
     me->command = STOP;
 }
 
+void MotorQRRun(void *context){
+    tMotorQR *me = (tMotorQR*)context;
+    me->ssp->run();
+}
+
 SSP_STATE_HANDLER(MotorStateUnknown);
 SSP_STATE_HANDLER(MotorStateIdle);
 SSP_STATE_HANDLER(MotorStateIdleUp);
@@ -38,7 +43,7 @@ static const tSSP_State MotorStateMachine[] = {
 
     SSP_STATE_LAST()};
 
-tMotorQR *MotorQR_create(int channelNr)
+tMotorQR *MotorQR_create(int channelNr, tProcess *head)
 {
     tMotorQR *result = NULL;
 
@@ -48,7 +53,7 @@ tMotorQR *MotorQR_create(int channelNr)
         goto err_no_memory;
     }
 
-    MotorQR_init(result, channelNr);
+    MotorQR_init(result, channelNr, head);
 
     return result;
 
@@ -68,7 +73,7 @@ void MotorQR_destroy(tMotorQR *me)
     }
 }
 
-void MotorQR_init(tMotorQR *me, int channelNr)
+void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
 {
     me->motor.up = Up;
     me->motor.down = Down;
@@ -89,6 +94,8 @@ void MotorQR_init(tMotorQR *me, int channelNr)
     me->ssp->reset();
     me->ssp->run();
     
+    me->run.run = MotorQRRun;
+    addRunable(head, &me->run, me);
     // SSP Test Code
     // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
     // me->ssp->run();

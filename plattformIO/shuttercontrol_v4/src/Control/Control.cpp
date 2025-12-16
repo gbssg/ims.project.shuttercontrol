@@ -1,10 +1,12 @@
-#include "Control.h"
 #include <Arduino.h>
+#include "Control.h"
+
 
 const int timeout = 300;
 
-void Run(tControl *me){
-    
+void ControlRun(void *context){
+    tControl *me = (tControl*)context;
+    me->ssp->run();
 }
 
 void Setup(tControl *me){
@@ -44,7 +46,7 @@ static const tSSP_State ControlStateMachine[] = {
 
     SSP_STATE_LAST()};
 
-tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor){
+tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor, tProcess *head){
     tControl *result = NULL;
 
     result = (tControl *)calloc(1, sizeof(tControl));
@@ -53,7 +55,7 @@ tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor){
         goto err_no_memory;
     }
 
-    Control_init(result, buttonGrpNr, motor);
+    Control_init(result, buttonGrpNr, motor, head);
 
     return result;
 
@@ -73,11 +75,10 @@ void Control_destroy(tControl *me){
     }
 }
 
-void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
+void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *head){
     // TODO: Add the context to the Processor
     me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, me);
     me->button = &buttons[buttonGrpNr];
-    me->run = Run;
     me->setup = Setup;
     me->buttonUp = new QwiicButton();
     me->buttonDown = new QwiicButton();
@@ -102,6 +103,8 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor){
     checkButton(me->buttonUp, me);
     checkButton(me->buttonDown, me);
     me->motor = motor;
+    me->run.run = ControlRun;
+    addRunable(head, &me->run, me);
 }
 void Control_deinit(tControl *me){
     // TODO: Find out what needs to be in the deinit

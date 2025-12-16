@@ -3,6 +3,8 @@
 #include <SimpleSoftTimer.h>
 #include <SparkFun_Qwiic_Button.h>
 #include "IMotor/IMotor.h"
+#include "IRun/IRun.h"
+#include "Scheduler/Scheduler.h"
 using namespace HolisticSolutions;
 
 typedef struct sControl tControl;
@@ -19,15 +21,14 @@ const tButtonDescriptor buttons[] = {
 };
 
 
-tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor);
+tControl *Control_create(uint8_t buttonGrpNr, tIMotor *motor, tProcess *head);
 void Control_destroy(tControl *me);
 
-void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor);
+void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *head);
 void Control_deinit(tControl *me);
 
 // typedef void (* tControl_GetState)(tControl *me);
 typedef void (* tControl_Setup)(tControl * me);
-typedef void (* tControl_Run)(tControl * me);
 
 typedef enum eControlState
 {
@@ -45,11 +46,11 @@ struct sControl
     const tButtonDescriptor *button;
     // TODO: is the setup needed or should i just make it in init? or call it in init
     tControl_Setup           setup;
-    tControl_Run             run;
     QwiicButton             *buttonUp;
     QwiicButton             *buttonDown;
     tIMotor                 *motor;
     SimpleSoftTimer         *timerPressed;
+    tIRun                    run;
     // TODO: Add state return function
     // tControl_GetState getState;
 };

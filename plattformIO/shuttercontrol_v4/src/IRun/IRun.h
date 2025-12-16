@@ -4,9 +4,10 @@ typedef struct sIRun tIRun;
 
 // TODO: What do I do to make it able to take different objects as "me" / context
 // Should i use a void pointer
-typedef void (* tIRun_Run)(tIRun *me);
+typedef void (* tIRun_Run)(void *context);
 
 struct sIRun
 {
     tIRun_Run run;
+    void *context;
 };
