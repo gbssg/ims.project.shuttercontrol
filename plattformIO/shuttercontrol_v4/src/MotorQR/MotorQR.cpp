@@ -1,5 +1,6 @@
 #include "MotorQR.h"
 #include <Arduino.h>
+#include "NetworkServer/NetworkServer.h"
 
 void Up(tIMotor *context)
 {
@@ -113,6 +114,8 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
 
     Serial.println(me->motor.getState(me));
     Serial.println(me->motor.getStateName(me));
+
+    addMotorServer(channelNr + 1, &me->motor);
     // SSP Test Code
     // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
     // me->ssp->run();

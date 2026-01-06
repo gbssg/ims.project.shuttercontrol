@@ -26,8 +26,6 @@ void setup()
 
     connectWifi();
     setupAPI();
-    addMotorServer(1, &motor->motor);
-    addMotorServer(2, &motor1->motor);
     // Serial.println(control->button->addrUp);
     // Serial.print("Debounce Time: ");
     // Serial.println(control->buttonUp->getDebounceTime());
