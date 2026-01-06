@@ -26,18 +26,10 @@ void setup()
 
     connectWifi();
     setupAPI();
-    // Serial.println(control->button->addrUp);
-    // Serial.print("Debounce Time: ");
-    // Serial.println(control->buttonUp->getDebounceTime());
 }
 
 void loop() 
 {
-    // control->run(control);
-    // control->ssp->run();
-    // control1->ssp->run();
     runAll(head);
     handleClient();
-    // motor1->ssp->run();
-    // motor->ssp->run();
 }
