@@ -22,6 +22,17 @@ void MotorQRRun(void *context){
     me->ssp->run();
 }
 
+uintptr_t MotorQRGetState(void *context){
+    tMotorQR *me = (tMotorQR*)context;
+    return me->ssp->CurrentStateGet();
+}
+
+const char* MotorQRGetStateName(void *context){
+    tMotorQR *me = (tMotorQR*)context;
+    return me->ssp->CurrentStateNameGet();
+}
+
+
 SSP_STATE_HANDLER(MotorStateUnknown);
 SSP_STATE_HANDLER(MotorStateIdle);
 SSP_STATE_HANDLER(MotorStateIdleUp);
@@ -96,6 +107,12 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
     
     me->run.run = MotorQRRun;
     addRunable(head, &me->run, me);
+
+    me->motor.getState = MotorQRGetState;
+    me->motor.getStateName = MotorQRGetStateName;
+
+    Serial.println(me->motor.getState(me));
+    Serial.println(me->motor.getStateName(me));
     // SSP Test Code
     // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
     // me->ssp->run();

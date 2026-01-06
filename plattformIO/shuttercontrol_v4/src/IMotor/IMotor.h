@@ -14,8 +14,8 @@ enum eCommand{
 typedef enum eCommand tCommand;
 
 typedef void (* tIMotor_Dir)(tIMotor *context);
-typedef uintptr_t (* tIMotor_GetState)(tIMotor *context);
-typedef const char * (* tIMotor_GetStateName)(tIMotor *context);
+typedef uintptr_t (* tIMotor_GetState)(void *context);
+typedef const char * (* tIMotor_GetStateName)(void *context);
 
 struct sIMotor
 {
