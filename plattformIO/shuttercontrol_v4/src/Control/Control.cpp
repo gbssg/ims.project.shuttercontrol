@@ -77,6 +77,7 @@ void Control_destroy(tControl *me){
 
 void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *head){
     // TODO: Add the context to the Processor
+    // TODO: rf
     me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, me);
     me->button = &buttons[buttonGrpNr];
     me->setup = Setup;

@@ -2,6 +2,7 @@
 #include "Control/Control.h"
 #include "MotorQR/MotorQR.h"
 #include "Scheduler/Scheduler.h"
+#include "NetworkServer/NetworkServer.h"
 
 tControl *control;
 tControl *control1;
@@ -22,6 +23,11 @@ void setup()
     
     control = Control_create(0, &motor->motor, head);
     control1 = Control_create(1, &motor1->motor, head);
+
+    connectWifi();
+    setupAPI();
+    addMotorServer(1, &motor->motor);
+    addMotorServer(2, &motor1->motor);
     // Serial.println(control->button->addrUp);
     // Serial.print("Debounce Time: ");
     // Serial.println(control->buttonUp->getDebounceTime());
@@ -33,6 +39,7 @@ void loop()
     // control->ssp->run();
     // control1->ssp->run();
     runAll(head);
+    handleClient();
     // motor1->ssp->run();
     // motor->ssp->run();
 }
