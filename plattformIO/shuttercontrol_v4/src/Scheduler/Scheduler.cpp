@@ -1,8 +1,6 @@
 #include "Scheduler.h"
 #include <Arduino.h>
 
-//TODO: Make a list for the runables
-
 void addRunable(tProcess *head,tIRun *runnable, void *context){
     tProcess * current = head;
     while (current->next != NULL)

@@ -22,7 +22,6 @@ struct sIMotor
     tIMotor_Dir          up;
     tIMotor_Dir          down;
     tIMotor_Dir          stop;
-    // TODO: Add state return function and Implementation in all Classes (is get State Needed as Name or number?)
     tIMotor_GetState     getState;
     tIMotor_GetStateName getStateName;
     eCommand command;

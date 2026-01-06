@@ -90,7 +90,7 @@ void setupAPI()
     server.onNotFound([]()
                       {
 
-    String uri = server.uri();   // e.g. /motor/2/up
+    String uri = server.uri();
 
     if (!uri.startsWith("/motor/")) {
         server.send(404, "text/plain", "Not found");

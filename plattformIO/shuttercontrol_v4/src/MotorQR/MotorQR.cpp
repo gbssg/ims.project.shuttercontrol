@@ -116,10 +116,6 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
     Serial.println(me->motor.getStateName(me));
 
     addMotorServer(channelNr + 1, &me->motor);
-    // SSP Test Code
-    // me->ssp->NextStateSet(MOTOR_ST_GOINGUP);
-    // me->ssp->run();
-    // Serial.print(me->ssp->CurrentStateNameGet());
 }
 void MotorQR_deinit(tMotorQR *me)
 {
@@ -127,8 +123,6 @@ void MotorQR_deinit(tMotorQR *me)
     free(me->ssp);
 
 }
-
-// TODO: Implement the Simple State Processor
 
 SSP_STATE_HANDLER(MotorStateUnknown)
 {

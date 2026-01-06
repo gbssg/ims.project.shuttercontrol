@@ -146,21 +146,6 @@ SSP_STATE_HANDLER(ControlStateIdle){
             fsm->NextStateSet(CONTROL_ST_GOINGUP);
         }
         
-        // if (!me->buttonUp->isClickedQueueEmpty()){
-        //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
-        //     me->buttonUp->LEDon(100);
-        //     while (!me->buttonUp->isClickedQueueEmpty())
-        //     {
-        //         me->buttonUp->popClickedQueue();
-        //     }
-        // }
-
-        // if (me->buttonUp->isPressed() && me->timerPressed->isTimeout())
-        // {
-        //     me->timerPressed->restart();
-        //     fsm->NextStateSet(CONTROL_ST_GOINGUP);
-        // }
-        
         if (checkButton(me->buttonDown, me))
         {
             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
