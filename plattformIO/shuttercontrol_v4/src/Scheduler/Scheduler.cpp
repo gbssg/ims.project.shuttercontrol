@@ -16,6 +16,14 @@ void addRunable(tProcess *head,tIRun *runnable, void *context){
     current->next->next = NULL;
 }
 
+void addRunnableStart(tProcess *head,tIRun *runnable, void *context){
+    tProcess *node = (tProcess*)calloc(1, sizeof(tProcess));
+    node->next = head->next;
+    head->next = node;
+    head->next->process = runnable;
+    head->next->process->context = context;
+}
+
 void listRunable(){
 }
 
