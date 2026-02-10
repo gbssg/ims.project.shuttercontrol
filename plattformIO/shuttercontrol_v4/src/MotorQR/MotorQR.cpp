@@ -33,6 +33,31 @@ const char* MotorQRGetStateName(void *context){
     return me->ssp->CurrentStateNameGet();
 }
 
+void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context){
+    tObserver * current = observerHead;
+    while (current->next != NULL)
+    {
+        current = current->next;
+    }
+
+    current->next = (tObserver*)calloc(1, sizeof(tObserver));
+    current->next->observer = runnable;
+    current->next->observer->context = context;
+    current->next->next = NULL;
+}
+
+void notifyAll(tObserver *observerHead){
+    if (!observerHead) return;
+
+    tObserver *current = observerHead->next;
+    while (current->next != NULL)
+    {
+        current->observer->run(current->observer->context);
+        current = current->next;
+    }
+    current->observer->run(current->observer->context);
+}
+
 
 SSP_STATE_HANDLER(MotorStateUnknown);
 SSP_STATE_HANDLER(MotorStateIdle);
@@ -55,7 +80,7 @@ static const tSSP_State MotorStateMachine[] = {
 
     SSP_STATE_LAST()};
 
-tMotorQR *MotorQR_create(int channelNr, tProcess *head)
+tMotorQR *MotorQR_create(int channelNr, tProcess *processHead, tObserver *observerHead)
 {
     tMotorQR *result = NULL;
 
@@ -65,8 +90,9 @@ tMotorQR *MotorQR_create(int channelNr, tProcess *head)
         goto err_no_memory;
     }
 
-    MotorQR_init(result, channelNr, head);
+    MotorQR_init(result, channelNr, processHead, observerHead);
 
+    
     return result;
 
     free(result);
@@ -85,7 +111,7 @@ void MotorQR_destroy(tMotorQR *me)
     }
 }
 
-void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
+void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver *observerHead)
 {
     me->motor.up = Up;
     me->motor.down = Down;
@@ -107,7 +133,7 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
     me->ssp->run();
     
     me->run.run = MotorQRRun;
-    addRunable(head, &me->run, me);
+    addRunable(processHead, &me->run, me);
 
     me->motor.getState = MotorQRGetState;
     me->motor.getStateName = MotorQRGetStateName;
@@ -115,6 +141,7 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head)
     Serial.println(me->motor.getState(me));
     Serial.println(me->motor.getStateName(me));
 
+    me->observerHead = observerHead;
     addMotorServer(channelNr + 1, &me->motor);
 }
 void MotorQR_deinit(tMotorQR *me)
@@ -131,6 +158,7 @@ SSP_STATE_HANDLER(MotorStateUnknown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Unknown");
         motor->relay->turnAllRelaysOff();
         fsm->NextStateSet(MOTOR_ST_IDLE);
@@ -139,7 +167,6 @@ SSP_STATE_HANDLER(MotorStateUnknown)
         /* code */
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;
@@ -154,6 +181,7 @@ SSP_STATE_HANDLER(MotorStateIdle)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Motor Idle");
         break;
     case SSP_REASON_DO:
@@ -176,7 +204,6 @@ SSP_STATE_HANDLER(MotorStateIdle)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;
@@ -191,6 +218,7 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Motor Idle Up");
         break;
     case SSP_REASON_DO:
@@ -216,7 +244,6 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;
@@ -231,6 +258,7 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Motor Idle Down");
         break;
     case SSP_REASON_DO:
@@ -256,7 +284,6 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;
@@ -271,6 +298,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Going Up");
         motor->relay->turnRelayOn(motor->channel->relayUp);
         break;
@@ -310,6 +338,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Going Down");
         motor->relay->turnRelayOn(motor->channel->relayDown);
         break;
@@ -349,6 +378,7 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Motor Wait Up");
         break;
     case SSP_REASON_DO:
@@ -373,7 +403,6 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;
@@ -388,6 +417,7 @@ SSP_STATE_HANDLER(MotorStateWaitDown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        notifyAll(motor->observerHead);
         Serial.println("Motor Wait Down");
         break;
     case SSP_REASON_DO:
@@ -412,7 +442,6 @@ SSP_STATE_HANDLER(MotorStateWaitDown)
         }
         break;
     case SSP_REASON_EXIT:
-        /* code */
         break;
     default:
         break;

@@ -8,12 +8,21 @@
 #include "Scheduler/Scheduler.h"
 using namespace HolisticSolutions;
 
+typedef struct sObserver tObserver;
+
+struct  sObserver
+{
+    tIRun *observer;
+    struct sObserver *next;
+};
+
+
 typedef struct sMotorQR tMotorQR;
 
-tMotorQR *MotorQR_create(int channelNr, tProcess *head);
+tMotorQR *MotorQR_create(int channelNr, tProcess *head, tObserver *observerHead);
 void MotorQR_destroy(tMotorQR *me);
 
-void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head);
+void MotorQR_init(tMotorQR *me, int channelNr, tProcess *head, tObserver *observerHead);
 void MotorQR_deinit(tMotorQR *me);
 
 typedef struct sChannelDescriptor
@@ -50,4 +59,7 @@ struct sMotorQR
     SimpleSoftTimer          *timer;
     Qwiic_Relay              *relay;
     tIRun                     run;
+    tObserver                *observerHead;
 };
+
+void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context);
