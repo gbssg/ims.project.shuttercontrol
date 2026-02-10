@@ -87,24 +87,13 @@ WebServer server(80);
 void setupAPI()
 {
     // Testing
-    server.onNotFound([]()
-                      {
-
-    String uri = server.uri();
-
-    if (!uri.startsWith("/motor/")) {
-        server.send(404, "text/plain", "Not found");
+    server.on("/motor", HTTP_ANY, []() {
+    if(!server.hasArg("id") || !server.hasArg("cmd")){
+        server.send(400, "text/plain", "Missing arguments");
         return;
     }
-
-    int slash = uri.indexOf('/', 7);
-    if (slash < 0) {
-        server.send(400, "text/plain", "Bad URL");
-        return;
-    }
-
-    uint8_t id = uri.substring(7, slash).toInt();
-    String cmd = uri.substring(slash + 1);
+    uint8_t id = server.arg("id").toInt();
+    String cmd = server.arg("cmd");
 
     tIMotor *motor = findMotor(id);
     if (!motor) {
