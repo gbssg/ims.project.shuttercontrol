@@ -5,6 +5,7 @@ nav:
   - Infos: info.md
   - Ideen: ideen.md
   - Komponenten: komponenten.md
+  - Dokumentation: documentation.md
 
 
 exclude_docs: |
