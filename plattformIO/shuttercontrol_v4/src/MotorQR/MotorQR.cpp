@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include "NetworkServer/NetworkServer.h"
 
+float shutterTime = 44000.0f;
+
 void Up(tIMotor *context)
 {
     tIMotor *me = context;
@@ -31,6 +33,11 @@ uintptr_t MotorQRGetState(void *context){
 const char* MotorQRGetStateName(void *context){
     tMotorQR *me = (tMotorQR*)context;
     return me->ssp->CurrentStateNameGet();
+}
+
+int MotorQRGetHeightProcentage(void *context){
+    tMotorQR *me = (tMotorQR*)context;
+    return me->heightPrecentage;
 }
 
 void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context){
@@ -116,9 +123,14 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     me->motor.up = Up;
     me->motor.down = Down;
     me->motor.stop = Stop;
+    me->motor.getHightPrcentage = MotorQRGetHeightProcentage;
     me->motor.command = NONE;
     me->motor.context = me;
     me->relayAddress = 0x6D;
+    me->heightPrecentage = 100;
+    me->startHeight = 0;
+    me->startTime = 0;
+    me->endTime = 0;
     me->relay = new Qwiic_Relay(me->relayAddress);
     if (!me->relay->begin())
     {
@@ -299,10 +311,21 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
     {
     case SSP_REASON_ENTER:
         notifyAll(motor->observerHead);
+        motor->startHeight = motor->heightPrecentage;
+        motor->startTime = millis();
         Serial.println("Going Up");
         motor->relay->turnRelayOn(motor->channel->relayUp);
         break;
     case SSP_REASON_DO:
+        motor->endTime = millis();
+        if (motor->endTime - motor->startTime > 100){
+            motor->heightPrecentage = motor->startHeight + ((float)(motor->endTime - motor->startTime) / shutterTime * 100.0f);
+            Serial.println(motor->heightPrecentage);
+            if(motor->heightPrecentage > 100){
+            motor->heightPrecentage = 100;
+            motor->startHeight = 100; //roll over prevention
+        }
+        }
         switch (me->command)
         {
         case UP:
@@ -339,10 +362,21 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
     {
     case SSP_REASON_ENTER:
         notifyAll(motor->observerHead);
+        motor->startTime = millis();
+        motor->startHeight = motor->heightPrecentage;
         Serial.println("Going Down");
         motor->relay->turnRelayOn(motor->channel->relayDown);
         break;
     case SSP_REASON_DO:
+        motor->endTime = millis();
+        if (motor->endTime - motor->startTime > 100){
+            motor->heightPrecentage = motor->startHeight - ((float)(motor->endTime - motor->startTime) / shutterTime * 100);
+            if(motor->heightPrecentage < 0){
+                motor->heightPrecentage = 0;
+                motor->startHeight = 0; //roll over prevention
+            }
+            Serial.println(motor->heightPrecentage);
+        }
         switch (me->command)
         {
         case UP:

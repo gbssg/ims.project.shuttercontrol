@@ -6,6 +6,8 @@
 #include <WebServer.h>
 #include "NetworkServer.h"
 
+#include "MotorQR/MotorQR.h"
+
 // you need to make your own secrets.h file to connect to your Nertwork
 // plattformIO\shuttercontrol_v3\lib\secrets\secrets.h
 // Template:
@@ -92,6 +94,7 @@ void setupAPI()
         server.send(400, "text/plain", "Missing arguments");
         return;
     }
+    server.sendHeader("Access-Control-Allow-Origin", "*");
     uint8_t id = server.arg("id").toInt();
     String cmd = server.arg("cmd");
 
@@ -100,7 +103,6 @@ void setupAPI()
         server.send(404, "text/plain", "Motor not found");
         return;
     }
-
     if (cmd == "up") {
         motor->up(motor);
     }
@@ -109,6 +111,17 @@ void setupAPI()
     }
     else if (cmd == "stop") {
         motor->stop(motor);
+    }
+    else if (cmd == "getHeight"){
+        tMotorQR *motorQR = (tMotorQR*)motor->context;
+        int height = motor->getHightPrcentage(motorQR);
+        String json = "{\"height\": " + String(height) + "}";
+        server.send(200, "application/json", json);
+        return;
+    }
+    else if (cmd == "reset")
+    {
+        motor->up(motor);
     }
     else {
         server.send(400, "text/plain", "Invalid command");

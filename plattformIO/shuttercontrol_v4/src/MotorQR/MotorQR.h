@@ -60,6 +60,10 @@ struct sMotorQR
     Qwiic_Relay              *relay;
     tIRun                     run;
     tObserver                *observerHead;
+    int                       heightPrecentage;
+    int                       startTime;
+    int                       endTime;
+    int                       startHeight;
 };
 
 void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context);
