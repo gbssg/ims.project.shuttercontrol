@@ -103,5 +103,36 @@ document.getElementById("preset4").addEventListener("click", () => {
   fetch(`${ip}motor?id=2&cmd=stop`);
 });
 
+document.getElementById("preset4").addEventListener("click", () => {
+  fetch(`${ip}motor?id=1&cmd=up`);
+  fetch(`${ip}motor?id=2&cmd=up`);
+});
+
+function updateHeight() {
+    fetch(`${ip}motor?id=1&cmd=getHeight`)
+        .then(response => { 
+            return response.json();
+        })
+        .then(data => {
+            console.log("Aktuelle Höhe:", data.height);
+            document.getElementById("heightDisplay").innerText = data.height + " %";
+        })
+        .catch(error => {
+            console.error("Fehler beim Abrufen der Daten:", error);
+        });
+        fetch(`${ip}motor?id=2&cmd=getHeight`)
+        .then(response => { 
+            return response.json();
+        })
+        .then(data => {
+            console.log("Aktuelle Höhe 2:", data.height);
+            document.getElementById("heightDisplay2").innerText = data.height + " %";
+        })
+        .catch(error => {
+            console.error("Fehler beim Abrufen der Daten:", error);
+        });
+}
+
+setInterval(updateHeight, 1000);
 
 
