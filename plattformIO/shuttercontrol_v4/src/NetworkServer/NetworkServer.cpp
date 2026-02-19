@@ -104,11 +104,11 @@ void setupAPI()
     String cmd = server.arg("cmd");
 
     tIMotor *motor = findMotor(id);
-    tMotorQR *motorQR = (tMotorQR*)motor->context;
     if (!motor) {
         server.send(404, "text/plain", "Motor not found");
         return;
     }
+    tMotorQR *motorQR = (tMotorQR*)motor->context;
 
     if (server.hasArg("height")) {
         
