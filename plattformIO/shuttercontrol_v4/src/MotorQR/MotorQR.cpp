@@ -18,11 +18,36 @@ void Stop(tIMotor *context)
 {
     tIMotor *me = context;
     me->command = STOP;
+
+
+}
+
+void MotorQRHandleHeight(tMotorQR *me) {
+    if (me->targetHeight != -1){
+        if (me->heightPrecentage < 0) me->heightPrecentage = 0;
+        if (me->heightPrecentage > 100) me->heightPrecentage = 100;
+        if (me->targetHeight < 0) me->targetHeight = 0;
+        if (me->targetHeight > 100) me->targetHeight = 100;
+        Serial.println("Current Height: " + String(me->heightPrecentage) + " Target Height" + String(me->targetHeight));
+        if(me->targetHeight < me->heightPrecentage){
+            Serial.println("motor Down");
+            me->motor.down(&me->motor);
+        }
+        else if(me->targetHeight > me->heightPrecentage){
+            Serial.println("motor Up");
+            me->motor.up(&me->motor);
+        }
+        else{
+            me->motor.stop(&me->motor);
+            me->targetHeight = -1;
+        }
+    }
 }
 
 void MotorQRRun(void *context){
     tMotorQR *me = (tMotorQR*)context;
     me->ssp->run();
+    MotorQRHandleHeight(me);
 }
 
 uintptr_t MotorQRGetState(void *context){
@@ -129,6 +154,7 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     me->relayAddress = 0x6D;
     me->heightPrecentage = 100;
     me->startHeight = 0;
+    me->targetHeight = -1;
     me->startTime = 0;
     me->endTime = 0;
     me->relay = new Qwiic_Relay(me->relayAddress);
@@ -320,7 +346,6 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
         motor->endTime = millis();
         if (motor->endTime - motor->startTime > 100){
             motor->heightPrecentage = motor->startHeight + ((float)(motor->endTime - motor->startTime) / shutterTime * 100.0f);
-            Serial.println(motor->heightPrecentage);
             if(motor->heightPrecentage > 100){
             motor->heightPrecentage = 100;
             motor->startHeight = 100; //roll over prevention
@@ -375,7 +400,6 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
                 motor->heightPrecentage = 0;
                 motor->startHeight = 0; //roll over prevention
             }
-            Serial.println(motor->heightPrecentage);
         }
         switch (me->command)
         {

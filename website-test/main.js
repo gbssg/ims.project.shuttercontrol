@@ -1,4 +1,4 @@
-const ip = "http://esp32-4cb7e0.cl04.ch/";
+const ip = "http://http://espmicromod-001.cl04.ch/";
 
 
 document.getElementById("up_button").addEventListener("click", () => {

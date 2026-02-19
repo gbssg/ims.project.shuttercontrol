@@ -64,6 +64,7 @@ struct sMotorQR
     int                       startTime;
     int                       endTime;
     int                       startHeight;
+    int                       targetHeight = -1;
 };
 
 void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context);

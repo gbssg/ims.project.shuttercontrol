@@ -60,6 +60,10 @@ tIMotor *findMotor(uint8_t id)
 void connectWifi()
 {
     wifiTryCount = 0;
+
+    WiFi.setHostname("ESPMicroMod-001");
+    Serial.println(WiFi.getHostname());
+    WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi...");
     while (WiFi.status() != WL_CONNECTED && wifiTryCount < 20)
@@ -89,7 +93,8 @@ WebServer server(80);
 void setupAPI()
 {
     // Testing
-    server.on("/motor", HTTP_ANY, []() {
+    server.on("/motor", HTTP_ANY, []()
+              {
     if(!server.hasArg("id") || !server.hasArg("cmd")){
         server.send(400, "text/plain", "Missing arguments");
         return;
@@ -99,33 +104,39 @@ void setupAPI()
     String cmd = server.arg("cmd");
 
     tIMotor *motor = findMotor(id);
+    tMotorQR *motorQR = (tMotorQR*)motor->context;
     if (!motor) {
         server.send(404, "text/plain", "Motor not found");
         return;
     }
-    if (cmd == "up") {
-        motor->up(motor);
+
+    if (server.hasArg("height")) {
+        
+        motorQR->targetHeight = server.arg("height").toInt();
     }
-    else if (cmd == "down") {
-        motor->down(motor);
-    }
-    else if (cmd == "stop") {
-        motor->stop(motor);
-    }
-    else if (cmd == "getHeight"){
-        tMotorQR *motorQR = (tMotorQR*)motor->context;
-        int height = motor->getHightPrcentage(motorQR);
-        String json = "{\"height\": " + String(height) + "}";
-        server.send(200, "application/json", json);
-        return;
-    }
-    else if (cmd == "reset")
+    else
     {
-        motor->up(motor);
-    }
-    else {
-        server.send(400, "text/plain", "Invalid command");
-        return;
+        motorQR->targetHeight = -1;
+        if (cmd == "up") {
+            motor->up(motor);
+        }
+        else if (cmd == "down") {
+            motor->down(motor);
+        }
+        else if (cmd == "stop") {
+            motor->stop(motor);
+        }
+        else if (cmd == "getHeight"){
+            tMotorQR *motorQR = (tMotorQR*)motor->context;
+            int height = motor->getHightPrcentage(motorQR);
+            String json = "{\"height\": " + String(height) + "}";
+            server.send(200, "application/json", json);
+            return;
+        }
+        else {
+            server.send(400, "text/plain", "Invalid command");
+            return;
+        }
     }
 
     server.send(200, "text/plain", "OK"); });
