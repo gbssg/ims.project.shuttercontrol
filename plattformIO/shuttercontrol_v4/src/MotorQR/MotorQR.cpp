@@ -319,12 +319,11 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
     case SSP_REASON_DO:
         motor->endTime = millis();
         if (motor->endTime - motor->startTime > 100){
-            motor->heightPrecentage = motor->startHeight + ((float)(motor->endTime - motor->startTime) / shutterTime * 100.0f);
-            Serial.println(motor->heightPrecentage);
-            if(motor->heightPrecentage > 100){
-            motor->heightPrecentage = 100;
-            motor->startHeight = 100; //roll over prevention
-        }
+            motor->heightPrecentage = motor->startHeight - ((float)(motor->endTime - motor->startTime) / shutterTime * 100);
+            if(motor->heightPrecentage < 0){
+                motor->heightPrecentage = 0;
+                motor->startHeight = 0; //roll over prevention
+            }
         }
         switch (me->command)
         {
@@ -370,12 +369,12 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
     case SSP_REASON_DO:
         motor->endTime = millis();
         if (motor->endTime - motor->startTime > 100){
-            motor->heightPrecentage = motor->startHeight - ((float)(motor->endTime - motor->startTime) / shutterTime * 100);
-            if(motor->heightPrecentage < 0){
-                motor->heightPrecentage = 0;
-                motor->startHeight = 0; //roll over prevention
-            }
+            motor->heightPrecentage = motor->startHeight + ((float)(motor->endTime - motor->startTime) / shutterTime * 100.0f);
             Serial.println(motor->heightPrecentage);
+            if(motor->heightPrecentage > 100){
+                motor->heightPrecentage = 100;
+                motor->startHeight = 100; //roll over prevention
+            }
         }
         switch (me->command)
         {
