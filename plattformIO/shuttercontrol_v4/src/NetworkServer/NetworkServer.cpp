@@ -60,6 +60,7 @@ tIMotor *findMotor(uint8_t id)
 void connectWifi()
 {
     wifiTryCount = 0;
+    WiFi.setHostname("ESPMicroMod-001");
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi...");
     while (WiFi.status() != WL_CONNECTED && wifiTryCount < 20)
