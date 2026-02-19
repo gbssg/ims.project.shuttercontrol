@@ -1,9 +1,13 @@
 ## Übersicht
 
+### Wieso Shuttercontrol?
+
 Das Ziel des Projekts ist die Steuerung der Jalousien zu vereinfachen durch eine Steuerung per Website/App.
 Dafür wurde ein ESP32 mit Qwiic-Hardware verwendet.
 
-Dieses Projekt nutzt objektorientiertes C, um eine leichte Erweiterbarkeit zu gewährleisten.
+### Was kann Shuttercontrol?
+
+Shuttercontrol nutzt objektorientiertes C, um eine leichte Erweiterbarkeit zu gewährleisten und wurde gewählt um das Konzept der
 Der Code nutzt I2C um mit den verschiedenen Hardware-Komponenten zu kommunizieren.
 Das Projekt wird mit Steckverbindungen eingebaut für einen schnellen Wechsel zwischen den Drehschaltern und diesem Projekt.
 
