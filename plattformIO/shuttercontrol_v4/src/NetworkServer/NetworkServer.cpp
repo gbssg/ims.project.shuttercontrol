@@ -83,6 +83,7 @@ void connectWifi()
 }
 
 WebServer server(80);
+int standardTime = 43000;
 
 void setupAPI()
 {
@@ -101,13 +102,23 @@ void setupAPI()
         return;
     }
 
+    if (server.hasArg("time")) {
+        motor->time = server.arg("time").toInt();
+    }
+    else {
+        motor->time = standardTime;
+    }
+
     if (cmd == "up") {
+        motor->startTime = millis();
         motor->up(motor);
     }
     else if (cmd == "down") {
+        motor->startTime = millis();
         motor->down(motor);
     }
     else if (cmd == "stop") {
+        motor->startTime = millis();
         motor->stop(motor);
     }
     else {
@@ -120,7 +131,25 @@ void setupAPI()
     server.begin();
 }
 
+void checkTimeout(tIMotor *motor) {
+    if ((millis() - motor->startTime) > motor->time && motor->time != 0) {
+        motor->time = 0;
+        motor->stop(motor);
+    }
+}
+
+void checkAllMotors() {
+    for (tMotorNode *n = motorListHead.next; n; n = n->next)
+    {
+        if (n->id)
+        {
+            checkTimeout(n->motor);
+        }
+    }
+}
+
 void handleClient()
 {
     server.handleClient();
+    checkAllMotors();
 }

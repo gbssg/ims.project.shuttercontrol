@@ -298,6 +298,7 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        me->startTime = millis();
         notifyAll(motor->observerHead);
         Serial.println("Going Up");
         motor->relay->turnRelayOn(motor->channel->relayUp);
@@ -338,6 +339,7 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
     switch (reason)
     {
     case SSP_REASON_ENTER:
+        me->startTime = millis();
         notifyAll(motor->observerHead);
         Serial.println("Going Down");
         motor->relay->turnRelayOn(motor->channel->relayDown);

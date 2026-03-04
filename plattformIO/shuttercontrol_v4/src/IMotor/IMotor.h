@@ -24,6 +24,8 @@ struct sIMotor
     tIMotor_Dir          stop;
     tIMotor_GetState     getState;
     tIMotor_GetStateName getStateName;
-    eCommand command;
-    void *context;
+    eCommand             command;
+    int                  time;
+    int                  startTime;
+    void                *context;
 };
