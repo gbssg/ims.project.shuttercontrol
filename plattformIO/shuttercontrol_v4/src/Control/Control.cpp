@@ -3,8 +3,9 @@
 #include "MotorQR/MotorQR.h"
 
 
-const int timeout = 300;
+const int cmdDuration = 300;
 const uint8_t brightness = 100;
+unsigned long holdTimeout = 300;
 
 void ControlRun(void *context){
     tControl *me = (tControl*)context;
@@ -36,43 +37,96 @@ void motorNotification(void *context){
 }
 
 int checkButton(QwiicButton* button, tControl *me){
-    if (!button->isPressedQueueEmpty() && me->timerPressed->isTimeout()){
-        while (!button->isPressedQueueEmpty())
-        {
-            button->popPressedQueue();
-        }
-        me->timerPressed->restart();
-        return 1;
-    }
-    else
+
+    if (!me->isPressed && button->isPressed())
     {
-        while (!button->isPressedQueueEmpty())
+        me->isPressed = true;
+        me->holdTriggered = false;
+        me->buttonTimestamp = millis();
+ 
+        button->clearEventBits();
+        return 0;
+    }
+ 
+    if (me->isPressed && button->isPressed())
+    {
+        if (!me->holdTriggered && (millis() - me->buttonTimestamp) >= holdTimeout)
         {
-            button->popPressedQueue();
+            me->holdTriggered = true;
+            return 2;
         }
         return 0;
     }
+ 
+    if (me->isPressed && !button->isPressed() && button->hasBeenClicked())
+    {
+        me->isPressed = false;
+        button->clearEventBits();
+ 
+        if (!me->holdTriggered) {
+            return 1;
+        }
+    }
+ 
+    return 0;
 }
 
 void runControl(void *context){
     tControl *me = (tControl*)context;
-    
-    if(checkButton(me->buttonUp, me)){
+    switch (checkButton(me->buttonUp, me))
+    {
+    case 1:
+        if(me->currentMotorState == MOTOR_ST_GOINGUP){
+            me->motor->stop(me->motor);
+        }
+        else{
+            me->motor->up(me->motor);
+            me->checkTimeout = true;
+            me->timerShortPress->restart();
+        }  
+        break;
+    case 2:
         if(me->currentMotorState == MOTOR_ST_GOINGUP){
             me->motor->stop(me->motor);
         }
         else{
             me->motor->up(me->motor);
         }
+        break;
+    default:
+        break;
     }
-    if(checkButton(me->buttonDown, me)){
+
+    switch (checkButton(me->buttonDown, me))
+    {
+    case 1:
+        if(me->currentMotorState == MOTOR_ST_GOINGDOWN){
+            me->motor->stop(me->motor);
+        }
+        else{
+            me->motor->down(me->motor);
+            me->checkTimeout = true;
+            me->timerShortPress->restart();
+        }
+        break;
+    case 2:
         if(me->currentMotorState == MOTOR_ST_GOINGDOWN){
             me->motor->stop(me->motor);
         }
         else{
             me->motor->down(me->motor);
         }
+        break;
+    default:
+        break;
     }
+
+    if (me->timerShortPress->isTimeout() && me->checkTimeout)
+    {
+        me->motor->stop(me->motor);
+        me->checkTimeout = false;
+    }
+
 }
 
 SSP_STATE_HANDLER(ControlStateUnknown);
@@ -142,9 +196,9 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *h
     me->buttonDown->enablePressedInterrupt();
     me->buttonUp->LEDoff();
     me->buttonDown->LEDoff();
-    me->timerPressed = new SimpleSoftTimer(timeout);
-    me->timerPressed->start(timeout);
-    me->timerPressed->restart();
+    me->timerShortPress = new SimpleSoftTimer(cmdDuration);
+    me->timerShortPress->start(cmdDuration);
+    me->timerShortPress->restart();
     // Chech button clears Queue
     checkButton(me->buttonUp, me);
     checkButton(me->buttonDown, me);

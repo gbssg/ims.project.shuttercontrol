@@ -50,10 +50,14 @@ struct sControl
     QwiicButton             *buttonUp;
     QwiicButton             *buttonDown;
     tIMotor                 *motor;
-    SimpleSoftTimer         *timerPressed;
+    SimpleSoftTimer         *timerShortPress;
     tIRun                    run;
     tIRun                    notification;
     uint8_t                  currentMotorState;
+    unsigned long            buttonTimestamp;
+    bool                     isPressed;
+    bool                     holdTriggered;
+    bool                     checkTimeout;
     // TODO: Add state return function
     // tControl_GetState getState;
 };
