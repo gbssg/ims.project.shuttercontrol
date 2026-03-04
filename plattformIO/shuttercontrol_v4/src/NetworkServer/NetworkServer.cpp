@@ -87,6 +87,10 @@ int standardTime = 43000;
 
 void setupAPI()
 {
+    const char* headerKeys[] = {"apikey"};
+    size_t headerKeysCount = 1;
+
+    server.collectHeaders(headerKeys, headerKeysCount);
     // Testing
     server.on("/motor", HTTP_ANY, []() {
     if(!server.hasArg("id") || !server.hasArg("cmd")){
@@ -128,6 +132,14 @@ void setupAPI()
 
     server.send(200, "text/plain", "OK"); });
 
+    server.on("/config", HTTP_PATCH, []{
+        Serial.println(server.header("api_key"));
+        if (server.header("api_key") != API_KEY) {
+            server.send(401, "text/plain", "Unauthorized");
+        }
+
+        server.send(200, "text/plain", "Authorized");
+    });
     server.begin();
 }
 
