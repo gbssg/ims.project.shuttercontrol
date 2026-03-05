@@ -14,6 +14,7 @@ enum eCommand{
 typedef enum eCommand tCommand;
 
 typedef void (* tIMotor_Dir)(tIMotor *context);
+typedef void (* tIMotor_Update)(tIMotor *context);
 typedef uintptr_t (* tIMotor_GetState)(void *context);
 typedef const char * (* tIMotor_GetStateName)(void *context);
 
@@ -25,6 +26,7 @@ struct sIMotor
     tIMotor_GetState     getState;
     tIMotor_GetStateName getStateName;
     eCommand             command;
+    tIMotor_Update       update;
     int                  time;
     int                  startTime;
     void                *context;
