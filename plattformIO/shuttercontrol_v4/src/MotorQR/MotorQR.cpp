@@ -1,6 +1,7 @@
 #include "MotorQR.h"
 #include <Arduino.h>
 #include "NetworkServer/NetworkServer.h"
+#include <EEPROM.h>
 
 void Up(tIMotor *context)
 {
@@ -125,10 +126,18 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
         Serial.print("Relay did not respond");
         while (1);
     }
+    int relaySwitchTime;
+    EEPROM.get(127, relaySwitchTime);
+    if (relaySwitchTime < 500){
+        relaySwitchTime = 1000;
+        EEPROM.put(127, relaySwitchTime);
+        EEPROM.commit();
+    }
+    Serial.println("Current Switchtime: " + String(relaySwitchTime));
     me->ssp = new SimpleStateProcessor(MOTOR_ST_UNKNOWN, MotorStateMachine, me);
     me->channel = &channels[channelNr];
-    me->timer = new SimpleSoftTimer(1000);
-    me->timer->start(1000);
+    me->timer = new SimpleSoftTimer(relaySwitchTime);
+    me->timer->start(relaySwitchTime);
     me->ssp->reset();
     me->ssp->run();
     

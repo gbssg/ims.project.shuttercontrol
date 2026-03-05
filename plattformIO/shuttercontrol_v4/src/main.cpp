@@ -3,6 +3,7 @@
 #include "MotorQR/MotorQR.h"
 #include "Scheduler/Scheduler.h"
 #include "NetworkServer/NetworkServer.h"
+#include <EEPROM.h>
 
 tControl  *control;
 tControl  *control1;
@@ -17,6 +18,7 @@ void setup()
     // Needed When using Qwiic Components
     Wire.begin();
     Serial.begin(115200);
+    EEPROM.begin(255);
     head = (tProcess*)calloc(1, sizeof(tProcess));
     observerHead = (tObserver*)calloc(1, sizeof(tObserver));
 

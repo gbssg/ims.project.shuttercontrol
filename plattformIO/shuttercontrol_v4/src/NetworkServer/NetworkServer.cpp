@@ -5,6 +5,9 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include "NetworkServer.h"
+#include <ArduinoJson.h>
+
+#include <EEPROM.h>
 
 // you need to make your own secrets.h file to connect to your Nertwork
 // plattformIO\shuttercontrol_v3\lib\secrets\secrets.h
@@ -83,18 +86,16 @@ void connectWifi()
 }
 
 WebServer server(80);
-int standardTime = 43000;
+int standardTime;
+
 
 void setupAPI()
 {
-    const char* headerKeys[] = {"apikey"};
-    size_t headerKeysCount = 1;
-
-    server.collectHeaders(headerKeys, headerKeysCount);
+    EEPROM.get(0, standardTime);
     // Testing
     server.on("/motor", HTTP_ANY, []() {
     if(!server.hasArg("id") || !server.hasArg("cmd")){
-        server.send(400, "text/plain", "Missing arguments");
+        server.send(400, "application/json", "Missing arguments");
         return;
     }
     uint8_t id = server.arg("id").toInt();
@@ -102,7 +103,7 @@ void setupAPI()
 
     tIMotor *motor = findMotor(id);
     if (!motor) {
-        server.send(404, "text/plain", "Motor not found");
+        server.send(404, "application/json", "Motor not found");
         return;
     }
 
@@ -126,20 +127,68 @@ void setupAPI()
         motor->stop(motor);
     }
     else {
-        server.send(400, "text/plain", "Invalid command");
+        server.send(400, "application/json", "Invalid command");
         return;
     }
 
-    server.send(200, "text/plain", "OK"); });
+    server.send(200, "application/json", "OK"); });
 
     server.on("/config", HTTP_PATCH, []{
         Serial.println(server.header("api_key"));
         if (server.header("api_key") != API_KEY) {
-            server.send(401, "text/plain", "Unauthorized");
+            server.send(401, "application/json", "Unauthorized");
+            return;
         }
 
-        server.send(200, "text/plain", "Authorized");
+        if (!server.hasArg("plain"))
+        {
+            server.send(400, "application/json", "Missing body");
+            return;
+        }
+        
+        String body = server.arg("plain");
+        StaticJsonDocument<512> doc;
+        DeserializationError error = deserializeJson(doc, body);
+
+        if (error) {
+            server.send(400, "application/json", "Invalid JSON");
+            return;
+        }
+
+        if (doc.containsKey("switchTime"))
+        {
+            int switchTime = doc["switchTime"];
+            if (switchTime >= 500 && switchTime <= 5000) {
+                EEPROM.put(127, switchTime);
+                EEPROM.commit();
+            }
+            else {
+                server.send(400, "application/json", "SwitchTime out of Bounds");
+            }
+        }
+
+        if (doc.containsKey("maxRuntime"))
+        {
+            int maxRuntime = doc["maxRuntime"];
+            if (maxRuntime >= 0 && maxRuntime <= 180000) {
+                EEPROM.put(0, maxRuntime);
+                EEPROM.commit();
+                standardTime = maxRuntime;
+            }
+            else {
+                server.send(400, "application/json", "maxRunTime out of Bounds");
+            }
+        }
+
+
+        server.send(200, "application/json", "Times have been Changed");
     });
+
+    const char* headerKeys[] = {"api_key"};
+    size_t headerKeysCount = 1;
+
+    server.collectHeaders(headerKeys, headerKeysCount);
+
     server.begin();
 }
 
