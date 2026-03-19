@@ -83,9 +83,7 @@ void connectWifi()
     }
     else
     {
-        Serial.println("");
-        Serial.print("Connection Failed");
-        Serial.println("");
+        Serial.print("\nConnection Failed\n");
     }
 }
 
@@ -96,7 +94,6 @@ int standardTime;
 void setupAPI()
 {
     EEPROM.get(0, standardTime);
-    // Testing
     server.on("/motor", HTTP_ANY, []() {
     if(!server.hasArg("id") || !server.hasArg("cmd")){
         server.send(400, "application/json", "Missing arguments");
@@ -183,7 +180,6 @@ void setupAPI()
                 server.send(400, "application/json", "maxRunTime out of Bounds");
             }
         }
-
 
         server.send(200, "application/json", "Times have been Changed");
     });
