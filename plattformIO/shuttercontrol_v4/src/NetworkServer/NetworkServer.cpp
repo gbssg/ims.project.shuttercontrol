@@ -75,8 +75,7 @@ void connectWifi()
     }
     if (WiFi.status() == WL_CONNECTED)
     {
-        Serial.println("");
-        Serial.println("Wifi Connected");
+        Serial.println("\nWifi Connected");
         Serial.println(WiFi.localIP());
         Serial.println(WiFi.getHostname());
         Serial.println("");
