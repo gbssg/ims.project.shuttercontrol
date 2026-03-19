@@ -20,6 +20,9 @@
 
 #include "secrets/secrets.h"
 
+#define SWITCH_TIME_ADDRESS 127
+#define MAX_RUNTIME_ADDRESS 0
+
 int wifiTryCount;
 
 typedef struct tMotorNode
@@ -159,11 +162,15 @@ void setupAPI()
         {
             int switchTime = doc["switchTime"];
             if (switchTime >= 500 && switchTime <= 5000) {
-                EEPROM.put(127, switchTime);
-                EEPROM.commit();
+                EEPROM.put(SWITCH_TIME_ADDRESS, switchTime);
+                if(!EEPROM.commit()) {
+                    server.send(500, "application/json", "{\"error\": \"EEPROM writing Error}");
+                    return;
+                }
             }
             else {
-                server.send(400, "application/json", "SwitchTime out of Bounds");
+                server.send(400, "application/json", "{\"error\": \"SwitchTime out of bounds\"}");
+                return;
             }
         }
 
@@ -172,12 +179,15 @@ void setupAPI()
         {
             int maxRuntime = doc["maxRuntime"];
             if (maxRuntime >= 0 && maxRuntime <= 180000) {
-                EEPROM.put(0, maxRuntime);
-                EEPROM.commit();
+                EEPROM.put(MAX_RUNTIME_ADDRESS, maxRuntime);
+                if(!EEPROM.commit()) {
+                   server.send(500, "application/json", "{\"error\": \"EEPROM writing Error}");
+                }
                 standardTime = maxRuntime;
             }
             else {
-                server.send(400, "application/json", "maxRunTime out of Bounds");
+                server.send(400, "application/json", "{\"error\": \"maxRunTime out of Bounds\"}");
+                return;
             }
         }
 
