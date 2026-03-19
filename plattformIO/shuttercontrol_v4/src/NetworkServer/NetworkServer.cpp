@@ -147,7 +147,7 @@ void setupAPI()
         }
         
         String body = server.arg("plain");
-        StaticJsonDocument<512> doc;
+        JsonDocument doc;
         DeserializationError error = deserializeJson(doc, body);
 
         if (error) {
@@ -155,7 +155,7 @@ void setupAPI()
             return;
         }
 
-        if (doc.containsKey("switchTime"))
+        if (doc["switchTime"].is<int>())
         {
             int switchTime = doc["switchTime"];
             if (switchTime >= 500 && switchTime <= 5000) {
@@ -167,7 +167,8 @@ void setupAPI()
             }
         }
 
-        if (doc.containsKey("maxRuntime"))
+
+        if (doc["maxRuntime"].is<int>())
         {
             int maxRuntime = doc["maxRuntime"];
             if (maxRuntime >= 0 && maxRuntime <= 180000) {
