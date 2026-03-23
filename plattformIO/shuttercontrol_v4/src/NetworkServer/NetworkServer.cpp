@@ -62,9 +62,10 @@ tIMotor *findMotor(uint8_t id)
 void connectWifi()
 {
     wifiTryCount = 0;
+    WiFi.mode(WIFI_STA);
+    WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
     WiFi.setHostname("ESPMicroMod-001");
     Serial.println(WiFi.getHostname());
-    WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     Serial.print("Connecting to WiFi...");
     while (WiFi.status() != WL_CONNECTED && wifiTryCount < 20)
@@ -92,6 +93,15 @@ void connectWifi()
 WebServer server(80);
 int standardTime;
 
+void updateAllMotors() {
+    for (tMotorNode *n = motorListHead.next; n; n = n->next)
+    {
+        if (n->id)
+        {
+            n->motor->update(n->motor);
+        }
+    }
+}
 
 void setupAPI()
 {
@@ -184,6 +194,7 @@ void setupAPI()
             }
         }
 
+        updateAllMotors();
 
         server.send(200, "application/json", "Times have been Changed");
     });

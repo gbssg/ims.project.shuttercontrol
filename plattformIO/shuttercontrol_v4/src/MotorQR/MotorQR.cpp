@@ -19,9 +19,23 @@ void Stop(tIMotor *context)
     me->command = STOP;
 }
 
-void MotorQRRun(void *context)
-{
-    tMotorQR *me = (tMotorQR *)context;
+void Update(tIMotor *context){
+    tIMotor *me = context;
+    tMotorQR *motor = (tMotorQR*)me->context;
+
+    int relaySwitchTime;
+    EEPROM.get(127, relaySwitchTime);
+    if (relaySwitchTime < 500){
+        relaySwitchTime = 1000;
+        EEPROM.put(127, relaySwitchTime);
+        EEPROM.commit();
+    }
+
+    motor->timer->start(relaySwitchTime);
+}
+
+void MotorQRRun(void *context){
+    tMotorQR *me = (tMotorQR*)context;
     me->ssp->run();
 }
 
@@ -123,6 +137,7 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     me->motor.stop = Stop;
     me->motor.command = NONE;
     me->motor.context = me;
+    me->motor.update = Update;
     me->relayAddress = 0x6D;
     me->relay = new Qwiic_Relay(me->relayAddress);
     if (!me->relay->begin())
