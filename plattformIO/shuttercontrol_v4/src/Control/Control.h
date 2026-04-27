@@ -28,7 +28,6 @@ void Control_destroy(tControl *me);
 void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *head, tObserver *observerHead);
 void Control_deinit(tControl *me);
 
-// typedef void (* tControl_GetState)(tControl *me);
 typedef void (* tControl_Setup)(tControl * me);
 
 typedef enum eControlState
@@ -45,7 +44,6 @@ struct sControl
 {
     SimpleStateProcessor    *ssp;
     const tButtonDescriptor *button;
-    // TODO: is the setup needed or should i just make it in init? or call it in init
     tControl_Setup           setup;
     QwiicButton             *buttonUp;
     QwiicButton             *buttonDown;
@@ -58,6 +56,4 @@ struct sControl
     bool                     isPressed;
     bool                     holdTriggered;
     bool                     checkTimeout;
-    // TODO: Add state return function
-    // tControl_GetState getState;
 };
