@@ -165,7 +165,6 @@ err_no_memory:
 void Control_destroy(tControl *me){
     if (me != NULL)
     {
-        //TODO: Think about the SSP maby deinit
         free(me);
         me = NULL;
     }
@@ -173,9 +172,6 @@ void Control_destroy(tControl *me){
 
 
 void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *head, tObserver *observerHead){
-    // TODO: Add the context to the Processor
-    // TODO: rf
-    // me->ssp = new SimpleStateProcessor(CONTROL_ST_UNKNOWN, ControlStateMachine, me);
     me->button = &buttons[buttonGrpNr];
     me->setup = Setup;
     me->buttonUp = new QwiicButton();
@@ -210,115 +206,5 @@ void Control_init(tControl *me, uint8_t buttonGrpNr, tIMotor *motor, tProcess *h
 }
 
 void Control_deinit(tControl *me){
-    // TODO: Find out what needs to be in the deinit
+
 }
-
-
-
-// SSP_STATE_HANDLER(ControlStateUnknown){
-//     tControl *me = (tControl*)context;
-//     switch (reason)
-//     {
-//     case SSP_REASON_ENTER:
-//         Serial.println("Control Unknown");
-//         me->motor->stop(me->motor);
-//         me->buttonUp->LEDoff();
-//         me->buttonDown->LEDoff();
-//         fsm->NextStateSet(CONTROL_ST_IDLE);
-//         break;
-//     case SSP_REASON_DO:
-//         break;
-//     case SSP_REASON_EXIT:
-//         break;
-//     default:
-//         break;
-//     }
-//     return 0;
-// }
-
-// SSP_STATE_HANDLER(ControlStateIdle){
-//     tControl *me = (tControl*)context;
-//     switch (reason)
-//     {
-//     case SSP_REASON_ENTER:
-//         Serial.println("Control Idle");
-//         me->motor->stop(me->motor);
-//         break;
-//     case SSP_REASON_DO:
-//         if (checkButton(me->buttonUp, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_GOINGUP);
-//         }
-        
-//         if (checkButton(me->buttonDown, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
-//         }
-        
-//         break;
-//     case SSP_REASON_EXIT:
-//         /* code */
-//         break;
-//     default:
-//         break;
-//     }
-//     return 0;
-// }
-
-// SSP_STATE_HANDLER(ControlStateGoingUp){
-//     tControl *me = (tControl*)context;
-//     switch (reason)
-//     {
-//     case SSP_REASON_ENTER:
-//         Serial.println("Control GoUp");
-//         me->motor->up(me->motor);
-//         me->buttonUp->LEDon(100);
-//         break;
-//     case SSP_REASON_DO:
-//         if (checkButton(me->buttonUp, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_IDLE);
-//         }
-
-//         if (checkButton(me->buttonDown, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_GOINGDOWN);
-//         }
-//         break;
-//     case SSP_REASON_EXIT:
-//         me->buttonUp->LEDoff();
-//         break;
-//     default:
-//         break;
-//     }
-//     return 0;
-// }
-
-// SSP_STATE_HANDLER(ControlStateGoingDown){
-//     tControl *me = (tControl*)context;
-//     switch (reason)
-//     {
-//     case SSP_REASON_ENTER:
-//         Serial.println("Control GoDown");
-//         me->motor->down(me->motor);
-//         me->buttonDown->LEDon(100);
-//         break;
-//     case SSP_REASON_DO:
-//         if (checkButton(me->buttonUp, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_GOINGUP);
-//         }
-
-//         if (checkButton(me->buttonDown, me))
-//         {
-//             fsm->NextStateSet(CONTROL_ST_IDLE);
-//         }
-//         break;
-//     case SSP_REASON_EXIT:
-//         me->buttonDown->LEDoff();
-//         break;
-//     default:
-//         break;
-//     }
-//     return 0;
-// }
