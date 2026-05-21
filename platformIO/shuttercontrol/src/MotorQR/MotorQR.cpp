@@ -39,31 +39,36 @@ void MotorQRRun(void *context){
     me->ssp->run();
 }
 
-uintptr_t MotorQRGetState(void *context){
-    tMotorQR *me = (tMotorQR*)context;
+uintptr_t MotorQRGetState(void *context)
+{
+    tMotorQR *me = (tMotorQR *)context;
     return me->ssp->CurrentStateGet();
 }
 
-const char* MotorQRGetStateName(void *context){
-    tMotorQR *me = (tMotorQR*)context;
+const char *MotorQRGetStateName(void *context)
+{
+    tMotorQR *me = (tMotorQR *)context;
     return me->ssp->CurrentStateNameGet();
 }
 
-void addChangeObserver(tObserver *observerHead,tIRun *runnable, void *context){
-    tObserver * current = observerHead;
+void addChangeObserver(tObserver *observerHead, tIRun *runnable, void *context)
+{
+    tObserver *current = observerHead;
     while (current->next != NULL)
     {
         current = current->next;
     }
 
-    current->next = (tObserver*)calloc(1, sizeof(tObserver));
+    current->next = (tObserver *)calloc(1, sizeof(tObserver));
     current->next->observer = runnable;
     current->next->observer->context = context;
     current->next->next = NULL;
 }
 
-void notifyAll(tObserver *observerHead){
-    if (!observerHead) return;
+void notifyAll(tObserver *observerHead)
+{
+    if (!observerHead)
+        return;
 
     tObserver *current = observerHead->next;
     while (current->next != NULL)
@@ -73,7 +78,6 @@ void notifyAll(tObserver *observerHead){
     }
     current->observer->run(current->observer->context);
 }
-
 
 SSP_STATE_HANDLER(MotorStateUnknown);
 SSP_STATE_HANDLER(MotorStateIdle);
@@ -108,7 +112,6 @@ tMotorQR *MotorQR_create(int channelNr, tProcess *processHead, tObserver *observ
 
     MotorQR_init(result, channelNr, processHead, observerHead);
 
-    
     return result;
 
     free(result);
@@ -140,11 +143,13 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     if (!me->relay->begin())
     {
         Serial.print("Relay did not respond");
-        while (1);
+        while (1)
+            ;
     }
     int relaySwitchTime;
     EEPROM.get(127, relaySwitchTime);
-    if (relaySwitchTime < 500){
+    if (relaySwitchTime < 500)
+    {
         relaySwitchTime = 1000;
         EEPROM.put(127, relaySwitchTime);
         EEPROM.commit();
@@ -156,7 +161,7 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     me->timer->start(relaySwitchTime);
     me->ssp->reset();
     me->ssp->run();
-    
+
     me->run.run = MotorQRRun;
     addRunable(processHead, &me->run, me);
 
@@ -169,17 +174,16 @@ void MotorQR_init(tMotorQR *me, int channelNr, tProcess *processHead, tObserver 
     me->observerHead = observerHead;
     addMotorServer(channelNr + 1, &me->motor);
 }
+
 void MotorQR_deinit(tMotorQR *me)
 {
-    // TODO: Find out what needs to be in the deinit
     free(me->ssp);
-
 }
 
 SSP_STATE_HANDLER(MotorStateUnknown)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -189,7 +193,6 @@ SSP_STATE_HANDLER(MotorStateUnknown)
         fsm->NextStateSet(MOTOR_ST_IDLE);
         break;
     case SSP_REASON_DO:
-        /* code */
         break;
     case SSP_REASON_EXIT:
         break;
@@ -201,8 +204,8 @@ SSP_STATE_HANDLER(MotorStateUnknown)
 
 SSP_STATE_HANDLER(MotorStateIdle)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -214,19 +217,16 @@ SSP_STATE_HANDLER(MotorStateIdle)
         {
         case UP:
             fsm->NextStateSet(MOTOR_ST_GOINGUP);
-            me->command = NONE;
             break;
         case DOWN:
             fsm->NextStateSet(MOTOR_ST_GOINGDOWN);
-            me->command = NONE;
             break;
         case STOP:
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         break;
@@ -238,8 +238,8 @@ SSP_STATE_HANDLER(MotorStateIdle)
 
 SSP_STATE_HANDLER(MotorStateIdleUp)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -251,22 +251,20 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
         {
         case UP:
             fsm->NextStateSet(MOTOR_ST_WAITDOWN);
-            me->command = NONE;
             break;
         case DOWN:
             fsm->NextStateSet(MOTOR_ST_GOINGDOWN);
-            me->command = NONE;
             break;
         case STOP:
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
-            if (motor->timer->isTimeout()){
+            if (motor->timer->isTimeout())
+            {
                 fsm->NextStateSet(MOTOR_ST_IDLE);
             }
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         break;
@@ -278,8 +276,8 @@ SSP_STATE_HANDLER(MotorStateIdleUp)
 
 SSP_STATE_HANDLER(MotorStateIdleDown)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -291,22 +289,20 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
         {
         case UP:
             fsm->NextStateSet(MOTOR_ST_GOINGUP);
-            me->command = NONE;
             break;
         case DOWN:
             fsm->NextStateSet(MOTOR_ST_WAITUP);
-            me->command = NONE;
             break;
         case STOP:
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
-            if (motor->timer->isTimeout()){
+            if (motor->timer->isTimeout())
+            {
                 fsm->NextStateSet(MOTOR_ST_IDLE);
             }
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         break;
@@ -318,8 +314,8 @@ SSP_STATE_HANDLER(MotorStateIdleDown)
 
 SSP_STATE_HANDLER(MotorStateGoingUp)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -332,20 +328,17 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
         switch (me->command)
         {
         case UP:
-            me->command = NONE;
             break;
         case DOWN:
             fsm->NextStateSet(MOTOR_ST_WAITUP);
-            me->command = NONE;
             break;
         case STOP:
-        fsm->NextStateSet(MOTOR_ST_IDLEDOWN);
-            me->command = NONE;
+            fsm->NextStateSet(MOTOR_ST_IDLEDOWN);
             break;
         default:
-            me->command = NONE;
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         motor->relay->turnRelayOff(motor->channel->relayUp);
@@ -359,8 +352,8 @@ SSP_STATE_HANDLER(MotorStateGoingUp)
 
 SSP_STATE_HANDLER(MotorStateGoingDown)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -374,19 +367,17 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
         {
         case UP:
             fsm->NextStateSet(MOTOR_ST_WAITDOWN);
-            me->command = NONE;
             break;
         case DOWN:
-            me->command = NONE;
             break;
         case STOP:
             fsm->NextStateSet(MOTOR_ST_IDLEUP);
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
+            
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         motor->relay->turnRelayOff(motor->channel->relayDown);
@@ -400,8 +391,8 @@ SSP_STATE_HANDLER(MotorStateGoingDown)
 
 SSP_STATE_HANDLER(MotorStateWaitUp)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -412,22 +403,20 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
         switch (me->command)
         {
         case UP:
-            me->command = NONE;
             break;
         case DOWN:
-            me->command = NONE;
             break;
         case STOP:
             fsm->NextStateSet(MOTOR_ST_IDLEDOWN);
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
-            if (motor->timer->isTimeout()){
+            if (motor->timer->isTimeout())
+            {
                 fsm->NextStateSet(MOTOR_ST_GOINGDOWN);
             }
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         break;
@@ -439,8 +428,8 @@ SSP_STATE_HANDLER(MotorStateWaitUp)
 
 SSP_STATE_HANDLER(MotorStateWaitDown)
 {
-    tIMotor *me = (tIMotor*)context;
-    tMotorQR *motor = (tMotorQR*)me->context;
+    tIMotor *me = (tIMotor *)context;
+    tMotorQR *motor = (tMotorQR *)me->context;
     switch (reason)
     {
     case SSP_REASON_ENTER:
@@ -451,22 +440,20 @@ SSP_STATE_HANDLER(MotorStateWaitDown)
         switch (me->command)
         {
         case UP:
-            me->command = NONE;
             break;
         case DOWN:
-            me->command = NONE;
             break;
         case STOP:
             fsm->NextStateSet(MOTOR_ST_IDLEUP);
-            me->command = NONE;
             break;
         default:
-            me->command = NONE;
-            if (motor->timer->isTimeout()){
+            if (motor->timer->isTimeout())
+            {
                 fsm->NextStateSet(MOTOR_ST_GOINGUP);
             }
             break;
         }
+        me->command = NONE;
         break;
     case SSP_REASON_EXIT:
         break;
