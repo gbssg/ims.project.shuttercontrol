@@ -1,12 +1,12 @@
-# Glossar
+# Glossary
 
-|    Wort    |                                                                                   Beschreibung                                                                                   |
-| :--------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-| PlatformIO | Ein Tool zum Kompilieren und Hochladen von Code für Mikrocontroller das in VS Code integriert ist. https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide |
-|  MotorQR   |                                                                                 Motor Quad Relay                                                                                 |
-| OOP mit C  |                                    Die Objekte werden manuell mit diversen Techniken erstellt. Um ein Objektorientiertes Umfeld zu kreieren.                                     |
-|     MC     |                                                                                 Mikrocontroller                                                                                  |
-|     NO     |                                             Normally Open, also standardmässig offen, ausser wenn das Relais aktiv angesteuert wird.                                             |
-|    COM     |                                                               Common terminal, Anschluss für "eingehenden" Strom.                                                                |
-|   ESP32    |                                                                 Ein 32 Bit Mikrocontroller von Espressif Systems                                                                 |
-|   fetch    |                                                              JavaScript-Funktion zur Durchführung von HTTP-Requests                                                              |
+|    Wort    |                                                              Description                                                               |
+| :--------: | :-------------------------------------------------------------------------------------------------------------------------------------: |
+| PlatformIO | Is an way to develop embedded software directly in VSCode https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide |
+|  MotorQR   |                                                            Motor Quad Relay                                                             |
+| OOP mit C  |                     There is a way to create something that resembles a class in C. This has teo be done manually.                      |
+|     MC     |                                                             microcontroller                                                             |
+|     NO     |                                       Normally Open, The contacts are open until told otherwise.                                        |
+|    COM     |                                             Common terminal, connection for "inbound" power                                             |
+|   ESP32    |                                  An 32Bit microcontroller from [espressif](https://www.espressif.com/)                                  |
+|   fetch    |                                       An Javascript-Function that is used to make HTTP-Requests.                                        |
