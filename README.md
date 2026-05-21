@@ -2,7 +2,7 @@
 
 ## Project description
 
-The project ShutterControl is a control for shutters that controls two motors in the standard configuration. These Motors can be controlled through an API or Buttons. It allows the control of the shutters from the desks and technically everywhere in the same Network.
+The project ShutterControl is a control for shutters that controls two shutters/motors in the standard configuration. These Motors can be controlled through an API or Buttons. It allows the control of the shutters from the desks and technically everywhere in the same Network.
 
 ## Starting point
 
@@ -15,7 +15,7 @@ The Project should allow the users to control the shutters from every desk so th
 ## Getting Started
 
 - Install the VisualStudio extension for [PlatformIO](vscode:extension/platformio.platformio-ide)
-- Create the file secrets.hin the folder `plattformIO\shuttercontrol_v4\lib\secrets\` with this Template: `plattformIO\shuttercontrol_v4\lib\secrets\template.secrets.h`
+- Create the file secrets.h in the folder `plattformIO\shuttercontrol_v4\lib\secrets\` with this Template: `plattformIO\shuttercontrol_v4\lib\secrets\template.secrets.h`
   - If the API-key is not set there is an possibility of an crash or unauthorized access. 
 - Upload the Code with PlatformIO
 
