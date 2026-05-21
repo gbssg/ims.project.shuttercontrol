@@ -1,0 +1,105 @@
+body {
+    background-color: black;
+    color: aliceblue;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16px;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h1 {
+    color: aliceblue;
+    padding-inline: 1.5%;
+    font-size: 2rem;
+}
+
+h2 {
+    padding-inline: 1.5%;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+img {
+    width: 10%;
+    height: auto;
+    padding: 1%;
+}
+
+button {
+    color: white;
+    background-color: green;
+    font-size: 1rem;
+    padding: 1%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+
+.sections {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    gap: 16px;
+    padding: 1.5%;
+}
+
+.section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5%;
+    width: 100%;  
+    gap: 8px;
+}
+
+@media (max-width: 600px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+        padding-inline: 3%;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+        padding-inline: 3%;
+    }
+
+    img {
+        width: 40%;
+        margin: 0 auto;
+    }
+
+    .sections {
+        flex-direction: column;
+    }
+
+    .buttons {
+        padding: 3%;
+        gap: 8px;
+    }
+
+    button {
+        font-size: 0.95rem;
+        padding: 3%;
+    }
+}
