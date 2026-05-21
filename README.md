@@ -1,65 +1,31 @@
 # ShutterControl
 
-## Projektbeschreibung
+## Project description
 
-Das Projekt ShutterControl ist eine Jalousiensteuerung für standardmässig zwei Motoren. Diese können per API oder Buttons gesteuert werden. Sie ermöglicht die Steuerung der Jalousien vom Platz aus oder überall im gleichen Netzwerk. Zusätzlich ist es möglich die Steuerung über eine API zu konfigurieren.
+The project ShutterControl is a control for shutters that controls two motors in the standard configuration. These Motors can be controlled through an API or Buttons. It allows the control of the shutters from the desks and technically everywhere in the same Network.
 
-## Ausgangslage
+## Starting point
 
-Die Ausgangslage war ein Rolladen mit zwei Schaltern. Die Steuerung vom Platz aus war nicht möglich. Man musste jedes Mal aufstehen, um die Schalter zu bedienen. Darum wurde oft die Person neben den Schaltern gebeten, dies zu tun.
+The Room had two shutters with their respective switch. There was no way to control them from the desks. To control the shutters someone had to stand up and walk to the switches or the person next to the switches was asked to open/close them.
 
 ## Vision
 
-Das Projekt sollte die Möglichkeit bieten, die Jalousien vom Platz aus zu steuern und so Zeit und Aufwand zu sparen. Zusätzlich muss die Person bei den Schaltern nicht mehr für andere Schalten. Diese Aufgabe sollte nun mit einem mit dem Internet verbundenen ESP32 ausgeführt werden. 
+The Project should allow the users to control the shutters from every desk so that we can save some time. Additionally the person next to the switches doesn't have to control the shutters for the others. This should be achieved with an ESP32 that is connected to the Internet and has some physical control for people without API access.
 
 ## Getting Started
 
-- Installiere die [PlatformIO](vscode:extension/platformio.platformio-ide)-Erweiterung
+- Install the VisualStudio extension for [PlatformIO](vscode:extension/platformio.platformio-ide)
+- Create the file secrets.hin the folder `plattformIO\shuttercontrol_v4\lib\secrets\` with this Template: `plattformIO\shuttercontrol_v4\lib\secrets\template.secrets.h`
+  - If the API-key is not set there is an possibility of an crash or unauthorized access. 
+- Upload the Code with PlatformIO
 
-- Erstelle die Datei secrets.h
+## Further reading
 
-Der API-Key wird für die Config-Api verwendet, falls dieser nicht gesetzt wird kann es zu einem Crash oder einem unautorisierten Zugriff kommen.
+- [Operation manual](docs/betriebshandbuch.md)
+- [Technical Documentation](docs/technischeDokumentation)
+- [Glossary](docs/glossar.md)
 
-> plattformIO\shuttercontrol_v4\lib\secrets\secrets.h
+## Contact
 
-Template:
-```h
-#pragma once
-
-const char *WIFI_SSID = "<SSID>";
-const char *WIFI_PASSWORD = "<PASSWORD>";
-const char *API_KEY = "<API_KEY>"; 
-```
-
-- Ich nutze diese PlatformIO Konfiguration mit dem ESP32 Micromod von Sparkfun. Wenn ein anderes Board verwendet wird muss es daher angepasst werden.
-
-```ini
-[env:sparkfun_esp32micromod]
-platform = espressif32
-board = sparkfun_esp32micromod
-framework = arduino
-lib_deps = holisticsolutions/SimpleStateProcessor
-           holisticsolutions/SimpleSoftTimer
-           bblanchon/ArduinoJson @ ^6.21.3
-monitor_speed = 115200
-build_flags = -Iinclude
-```
-
-- Upload Code mit PlatformIO
-
-## Links
-
-[Betriebshandbuch](docs/betriebshandbuch.md)
-
-[Technische Dokumentation](docs/technischeDokumentation)
-
-[Glossar](docs/glossar.md)
-
-## Kontakt
-
-- Github: [ims.project.shuttercontrol](https://github.com/gbssg/ims.project.shuttercontrol)
-- E-Mail: [bastian.lehmann@edu.gbssg.ch](mailto:bastian.lehmann@edu.gbssg.ch)
-
-
-
-
+- Issues and discussions: [ims.project.shuttercontrol](https://github.com/gbssg/ims.project.shuttercontrol)
+- Original maintainer: [@Basti8D](https://github.com/Basti8D)
