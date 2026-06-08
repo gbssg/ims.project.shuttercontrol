@@ -10,28 +10,33 @@
 
 <body>
     <header>
-        <h1>Rolladen Steuerung</h1>
+        <h1>Jalousien Steuerung</h1>
         <img src="../docs/img/logo.png" alt="IMS-T Logo">
     </header>
-    <div>
-        <h3>Rolladen Preset</h3>
-        <div class="buttons">
-            <button id="preset1">Preset Beide Gekippt</button>
-            <button id="preset2">Preset Beide Runter</button>
-            <button id="preset3">Preset Beide Hoch</button>
-            <button id="preset4">Preset Beide Stop</button>
+    <div class="shutters">
+        <div class="shutter">
+            <h2>Jalousie L</h2>
+            <div class="buttons">
+                <button id="up_button" class="up-button">Up</button>
+                <button id="down_button" class="down-button">Down</button>
+                <button id="stop_button" class="stop-button">Stop</button>
+            </div>
+            <div class="slider_with_value">
+                <input type="range" class="time-slider" min="0" max="45000" value="0" id="slider-1">
+                <span id="slider-output-1" class="slider_out">auto</span>
+            </div>
         </div>
-        <h3>Rolladen Links</h3>
-        <div class="buttons">
-            <button id="up_button">Up</button>
-            <button id="down_button">Down</button>
-            <button id="stop_button">Stop</button>
-        </div>
-        <h3>Rolladen Rechts</h3>
-        <div class="buttons">
-            <button id="up_button_2">Up</button>
-            <button id="down_button_2">Down</button>
-            <button id="stop_button_2">Stop</button>
+        <div class="shutter">
+            <h2>Jalousie R</h2>
+            <div class="buttons">
+                <button id="up_button_2" class="up-button">Up</button>
+                <button id="down_button_2" class="down-button">Down</button>
+                <button id="stop_button_2" class="stop-button">Stop</button>
+            </div>
+            <div class="slider_with_value">
+                <input type="range" class="time-slider" min="0" max="45000" value="0" id="slider-2">
+                <span id="slider-output-2" class="slider_out">auto</span>
+            </div>
         </div>
     </div>
     <script src="main.js"></script>
