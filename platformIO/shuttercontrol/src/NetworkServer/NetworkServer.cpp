@@ -108,6 +108,9 @@ void setupAPI()
     EEPROM.get(0, standardTime);
     // Testing
     server.on("/motor", HTTP_ANY, []() {
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    server.sendHeader("Access-Control-Allow-Headers", "*");
     if(!server.hasArg("id") || !server.hasArg("cmd")){
         server.send(400, "application/json", "Missing arguments");
         return;
@@ -148,6 +151,9 @@ void setupAPI()
     server.send(200, "application/json", "OK"); });
 
     server.on("/config", HTTP_PATCH, []{
+        server.sendHeader("Access-Control-Allow-Origin", "*");
+        server.sendHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        server.sendHeader("Access-Control-Allow-Headers", "*");
         Serial.println(server.header("api_key"));
         if (server.header("api_key") != API_KEY) {
             server.send(401, "application/json", "Unauthorized");

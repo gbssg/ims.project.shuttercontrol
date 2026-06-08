@@ -23,15 +23,19 @@ void motorNotification(void *context){
     Serial.print("Current State is: ");
     Serial.println(me->currentMotorState);
     if(me->currentMotorState == MOTOR_ST_GOINGUP){
+        Serial.println("Turning LED on");
         me->buttonUp->LEDon(brightness);
     }
     else{
+        Serial.println("Turning LED off");
         me->buttonUp->LEDoff();
     }
     if(me->currentMotorState == MOTOR_ST_GOINGDOWN){
+        Serial.println("Turning LED on");
         me->buttonDown->LEDon(brightness);
     }
     else{
+        Serial.println("Turning LED off");
         me->buttonDown->LEDoff();
     }
 }
