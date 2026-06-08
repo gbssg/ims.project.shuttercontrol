@@ -64,6 +64,7 @@ void connectWifi()
     wifiTryCount = 0;
     WiFi.mode(WIFI_STA);
     WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
+    WiFi.setSleep(false);
     WiFi.setHostname("ESPMicroMod-001");
     Serial.println(WiFi.getHostname());
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
