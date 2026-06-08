@@ -2,27 +2,29 @@
 
 ## Project description
 
-The project ShutterControl is a control for shutters that controls two shutters/motors in the standard configuration. These Motors can be controlled through an API or Buttons. It allows the control of the shutters from the desks and technically everywhere in the same Network.
+ShutterControl is a shutter controller that supports two shutter motors in the standard configuration. These motors can be controlled via an API or buttons. It allows users to control the shutters from any desk or anywhere on the same network.
 
 ## Starting point
 
-The Room had two shutters with their respective switch. There was no way to control them from the desks. To control the shutters someone had to stand up and walk to the switches or the person next to the switches was asked to open/close them.
+The room was equipped with two shutters. Each shutter was controlled by its own switch. To control the shutters, a person had to walk to the switches or the person next to them was asked to open or close them.
 
 ## Vision
 
-The Project should allow the users to control the shutters from every desk so that we can save some time. Additionally the person next to the switches doesn't have to control the shutters for the others. This should be achieved with an ESP32 that is connected to the Internet and has some physical control for people without API access.
+The project should allow users to control the shutters from any desk, which saves time. Additionally, the person next to the switches doesn't have to control the shutters for anyone else. This should be achieved with an ESP32 that is connected to the local network, while still providing physical control for people who cannot use the API.
 
 ## Getting Started
 
-- Install the VisualStudio extension for [PlatformIO](vscode:extension/platformio.platformio-ide)
-- Create the file secrets.h in the folder `plattformIO\shuttercontrol_v4\lib\secrets\` with this Template: `plattformIO\shuttercontrol_v4\lib\secrets\template.secrets.h`
-  - If the API-key is not set there is an possibility of an crash or unauthorized access. 
-- Upload the Code with PlatformIO
+- Install the Visual Studio Code extension for [PlatformIO](vscode:extension/platformio.platformio-ide)
+- Create the file secrets.h in the folder `platformIO/shuttercontrol/src/secrets/` with this template: `platformIO/shuttercontrol/src/secrets/template.secrets.h`
+  - If the API key is not set, there is a possibility of crashes or unauthorized access. 
+- Upload the code with PlatformIO
+
+
 
 ## Further reading
 
 - [Operation manual](docs/betriebshandbuch.md)
-- [Technical Documentation](docs/technischeDokumentation)
+- [Technical documentation](docs/technischeDokumentation)
 - [Glossary](docs/glossar.md)
 
 ## Contact

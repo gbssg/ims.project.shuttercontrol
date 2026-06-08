@@ -4,7 +4,7 @@
 
 ### Idea
 
-The Idea behind this project is the possibility to ease the controlling of shutters. This should be achieved by making it possible to control the shutters through an api and still have the possibility to control it physically. 
+The idea behind this project is to make controlling the shutters easier and available at every desk. This should be achieved by creating an API, that allows everyone in the same network to control it. If an user has no access he should be able to control it physically.
 
 ### System architecture
 
@@ -28,11 +28,11 @@ C, C++, OOP mit C, PlatformIO
 
 ![UML](img/UML-shuttercontrol_V3.drawio.png)
 
-The motors use the strategy pattern and are therefore replaceable my any class implementing IMotor.
+The motors use the strategy pattern and are therefore replaceable by any class implementing IMotor.
 
 #### State diagrams
 
-This diagram shows the function and how the motor ensures the operation.
+This diagram shows the function and how the motor ensures the operation without damaging components.
 ![State diagram](img/Zustandsdiagramm-shuttercontrol-Motor_V3.drawio.png)
 
 This diagram shows the logic used to create three output out of the two inputs for controlling the motor.
@@ -40,7 +40,7 @@ This diagram shows the logic used to create three output out of the two inputs f
 
 ### Frontend
 
-The current frontend is an basic website which uses fetch on the REST API provided by the ESP32. Currently there is a small problem on the server-side so that there is an error. Built it still works.
+The current frontend is a basic website which uses fetch on the REST API provided by the ESP32. Currently there is a small problem on the server-side so that there is an error. Built it still works because the initial ping is received.
 
 ### Possible Improvements/Features
 
@@ -48,7 +48,7 @@ See [Issues](https://github.com/gbssg/ims.project.shuttercontrol/issues)
 
 ### Getting started for developers
 
-The environment used is PlatformIO in Visual Studio Code. There is an configuration file that is configured to my hardware. When using different hardware the platformio.ini should be changed accordingly.
+The environment used is PlatformIO in Visual Studio Code. There is a configuration file that is configured to my hardware. When using different hardware the platformio.ini should be changed accordingly.
 
 If the Hostname has to be changed this can be done in the code. The corresponding code is located in the NetworkServer.cpp.
 
@@ -61,14 +61,24 @@ The [PlatformIO](vscode:extension/platformio.platformio-ide) extension has to be
 
 ### Dependencies
 
-**SimpleSoftTimer:** This library from [holisticsolutions](https://github.com/holisticsolutions) adds an lightweight an efficient timer that allows exact timings while switching or other timing related functions. 
+**SimpleSoftTimer:** This library from [Niederer Engineering GmbH](https://github.com/holisticsolutions) adds an lightweight an efficient timer that allows exact timings while switching or other timing related functions. 
 
-**SimpleStateProcessor:** This Library from [holisticsolutions](https://github.com/holisticsolutions) is used to create state machines more easily according to the [State diagrams](#State diagrams).
+**SimpleStateProcessor:** This library from [Niederer Engineering GmbH](https://github.com/holisticsolutions) is used to create state machines more easily according to the [state diagrams](#State diagrams). The run function has to be changed to this (the fix has been requested via an pull request):
+```cpp
+int SimpleStateProcessor::run() {
+    if (m_state_next != m_state_curr) {
+        m_state_curr->handler(this, SSP_REASON_EXIT, m_context);
+        m_state_curr = m_state_next;
+        m_state_next->handler(this, SSP_REASON_ENTER, m_context);
+    }
+    return m_state_curr->handler(this, SSP_REASON_DO, m_context);
+}
+```
 
 **Qwiic Button** This library from [SparkFun Electronics](https://github.com/sparkfun) allows easy access to the buttons.
 
-**Qwiic Relay** This library from [SparkFun Electronics](https://github.com/sparkfun) is used to control the quad relays.
+**Qwiic Relay** This library from [SparkFun Electronics](https://github.com/sparkfun) is used to control the quad relays and is able to control single relays too.
 
 ### Deployment
 
-This Project can be uploaded to an with USB connected micro-controller () with PlatformIO. 
+This project can be uploaded to a USB-connected microcontroller using PlatformIO.
