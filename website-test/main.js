@@ -1,107 +1,102 @@
-const ip = "http://esp32-4cb7e0.cl04.ch/";
+// const ip = "http://espmicromod-001.cl04.ch/";
+
+const ip = "http://10.5.8.6/";
 
 
 document.getElementById("up_button").addEventListener("click", () => {
   console.log("Up");
+  let sliderValue = parseInt(document.getElementById("slider-1").value)
+  let url = `${ip}motor?id=1&cmd=up`;
+  console.debug(sliderValue);
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=1&cmd=up`,{}
+    url,{}
   );
 });
 
 document.getElementById("down_button").addEventListener("click", () => {
   console.log("Down");
+  let sliderValue = parseInt(document.getElementById("slider-1").value)
+  let url = `${ip}motor?id=1&cmd=down`;
+  console.debug(sliderValue);
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=1&cmd=down`,{}
+    url,{}
   );
 });
 
 document.getElementById("stop_button").addEventListener("click", () => {
   console.log("Stop");
+  let sliderValue = parseInt(document.getElementById("slider-1").value)
+  let url = `${ip}motor?id=1&cmd=stop`;
+  console.debug(sliderValue);
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=1&cmd=stop`,{}
+    url,{}
   );
 });
 
 document.getElementById("up_button_2").addEventListener("click", () => {
   console.log("Up");
+  let sliderValue = parseInt(document.getElementById("slider-2").value)
+  let url = `${ip}motor?id=2&cmd=up`;
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=2&cmd=up`,{}
+    url,{}
   );
 });
 
 document.getElementById("down_button_2").addEventListener("click", () => {
   console.log("Down");
+  let sliderValue = parseInt(document.getElementById("slider-2").value)
+  let url = `${ip}motor?id=2&cmd=down`;
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=2&cmd=down`,{}
+    url,{}
   );
 });
 
 document.getElementById("stop_button_2").addEventListener("click", () => {
   console.log("Stop");
+  let sliderValue = parseInt(document.getElementById("slider-2").value)
+  let url = `${ip}motor?id=2&cmd=stop`;
+  if(sliderValue > 0){
+    url += `&time=${sliderValue}`
+  }
   fetch(
-    `${ip}motor?id=2&cmd=stop`,{}
+    url,{}
   );
 });
 
-document.getElementById("preset1").addEventListener("click", () => {
-  fetch(`${ip}motor?id=1&cmd=down`);
-  fetch(`${ip}motor?id=2&cmd=down`);
-  console.log("preset1");
-  setTimeout(() => {
-    console.log("preset1");
-    fetch(
-      `${ip}motor?id=1&cmd=up`,{}
-    );
-    fetch(
-      `${ip}motor?id=2&cmd=up`,{}
-    );
+var output1 = document.getElementById("slider-output-1");
+var output2 = document.getElementById("slider-output-2");
+var input1 = document.getElementById("slider-1");
+var input2 = document.getElementById("slider-2");
 
-    setTimeout(() => {
-      console.log("preset1");
-      fetch(
-        `${ip}motor?id=1&cmd=stop`,{}
-      );
-      fetch(
-        `${ip}motor?id=2&cmd=stop`,{}
-      );
-    }, 2000);
+input1.oninput = function() {
+  if (this.value > 0) {
+    output1.innerHTML = (this.value / 1000).toFixed(2) + "s";
+  }
+  else {
+    output1.innerHTML = "auto";
+  }
+}
 
-  }, 43000);
-});
-
-document.getElementById("preset2").addEventListener("click", () => {
-  fetch(`${ip}motor?id=1&cmd=down`);
-  fetch(`${ip}motor?id=2&cmd=down`);
-  console.log("preset1");
-  setTimeout(() => {
-    fetch(
-      `${ip}motor?id=1&cmd=stop`,{}
-    );
-    fetch(
-      `${ip}motor?id=2&cmd=stop`,{}
-    );
-  }, 43000);
-});
-
-document.getElementById("preset3").addEventListener("click", () => {
-  fetch(`${ip}motor?id=1&cmd=up`);
-  fetch(`${ip}motor?id=2&cmd=up`);
-  console.log("preset1");
-  setTimeout(() => {
-    fetch(
-      `${ip}motor?id=1&cmd=stop`,{}
-    );
-    fetch(
-      `${ip}motor?id=2&cmd=stop`,{}
-    );
-  }, 43000);
-});
-
-
-document.getElementById("preset4").addEventListener("click", () => {
-  fetch(`${ip}motor?id=1&cmd=stop`);
-  fetch(`${ip}motor?id=2&cmd=stop`);
-});
-
-
-
+input2.oninput = function() {
+  if (this.value > 0) {
+    output2.innerHTML = (this.value / 1000).toFixed(2) + "s";
+  }
+  else {
+    output2.innerHTML = "auto";
+  }
+}
